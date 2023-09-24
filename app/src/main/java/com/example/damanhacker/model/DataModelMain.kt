@@ -1,3 +1,3 @@
 package com.example.damanhacker.model
 
-data class DataModelMain(val period: Int, val number:Int,val color:String)
+data class DataModelMain__(val period: Int, val number:Int,val color:String)

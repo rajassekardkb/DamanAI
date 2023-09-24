@@ -1,6 +1,6 @@
 package com.example.damanhacker.utlities;
 
-import com.example.damanhacker.model.DataModelMain;
+import com.example.damanhacker.model.DataModelMainData;
 import com.example.damanhacker.model.returnData;
 
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ public class PatternCheck {
 
     ArrayList<String> finalResult = new ArrayList<>();
     public void patternCheckBasedOnSerialNumber() {
-        ArrayList<DataModelMain> dataList = new Mapping().getDummyData();
-        DataModelMain valueCurrent = dataList.get(0);
+        ArrayList<DataModelMainData> dataList = new Mapping().getDummyData();
+        DataModelMainData valueCurrent = dataList.get(0);
         pickData(1, dataList, valueCurrent.getColor());
     }
 
-    public void pickData(int startPosition_, ArrayList<DataModelMain> list, String matchValue) {
+    public void pickData(int startPosition_, ArrayList<DataModelMainData> list, String matchValue) {
         returnData returnDataVl = new returnData(startPosition_, matchValue);
         StringBuilder value = new StringBuilder(matchValue);
         int totalLoop = 0;

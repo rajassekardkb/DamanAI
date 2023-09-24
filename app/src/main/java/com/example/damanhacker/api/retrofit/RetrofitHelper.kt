@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
 
-    const val baseUrl = "https://trigonometric-disco.000webhostapp.com/app/"
+    const val baseUrl = "http://rajasekar.srisankaraastro.in/"
     private val logging =  HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
 
     private val client =  OkHttpClient.Builder()

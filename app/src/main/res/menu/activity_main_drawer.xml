@@ -11,10 +11,14 @@
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:title="@string/list" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="@string/dial" />
+        <item
+            android:id="@+id/nav_numberSeries"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/numeric" />
     </group>
 </menu>
