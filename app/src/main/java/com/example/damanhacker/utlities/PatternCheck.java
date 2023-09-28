@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class PatternCheck {
     StringBuilder value = new StringBuilder();
-
     ArrayList<String> finalResult = new ArrayList<>();
     public void patternCheckBasedOnSerialNumber() {
         ArrayList<DataModelMainData> dataList = new Mapping().getDummyData();

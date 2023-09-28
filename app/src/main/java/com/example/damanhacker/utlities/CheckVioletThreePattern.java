@@ -59,7 +59,7 @@ public class CheckVioletThreePattern {
         matchPosition++;
         for (int i = matchPosition; i < dataList.size(); i++) {
             currentValue = dataList.get(i).getValue();
-           // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
+            // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
 
             if ((valueMatching(currentValue, matchValue))) {
                 loopMax++;
@@ -72,7 +72,7 @@ public class CheckVioletThreePattern {
 
                 }
 
-               // System.out.println("If---->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
+                // System.out.println("If---->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
 
             } else {
                 //System.out.println("else-->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
@@ -118,7 +118,7 @@ public class CheckVioletThreePattern {
             check = true;
         }
 
-        if (matchPattern==0){
+        if (matchPattern == 0) {
 
         }
         // System.out.println(currentValue + ":" + matchValue);

@@ -10,56 +10,68 @@
         android:id="@+id/constHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/_7ssp"
-        android:paddingBottom="@dimen/_7ssp">
+        android:paddingTop="@dimen/_1ssp"
+        android:paddingBottom="@dimen/_1ssp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal"
-            android:gravity="center|center_horizontal"
+            android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:id="@+id/textTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5ssp"
+                android:layout_weight="0.7"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_7ssp" />
+
+            <TextView
                 android:id="@+id/textPeriod"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_weight="1.5"
-                android:text="Period"
+                android:layout_marginStart="@dimen/_1ssp"
+                android:layout_weight="0.4"
+                android:gravity="center_horizontal|center_vertical"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="@dimen/_7ssp" />
 
             <TextView
                 android:id="@+id/textNumber"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20ssp"
-                android:layout_weight="0.5"
-                android:text="Number"
+                android:layout_marginStart="@dimen/_1ssp"
+                android:layout_weight="0.3"
+                android:gravity="center|center_vertical"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp"
-
-                app:layout_constraintStart_toEndOf="@id/textPeriod"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="@dimen/_7ssp" />
 
             <TextView
                 android:id="@+id/textColor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20ssp"
-                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_1ssp"
+                android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="Number"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp"
+                android:textSize="@dimen/_7ssp" />
 
-                app:layout_constraintStart_toEndOf="@id/textNumber"
-                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textValues"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_1ssp"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_7ssp" />
 
             <LinearLayout
                 android:id="@+id/kjhgfds"
@@ -68,6 +80,7 @@
                 android:layout_weight="1"
                 android:gravity="center|center_horizontal"
                 android:textSize="@dimen/_9ssp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -93,8 +106,6 @@
                     android:src="@drawable/round_violet" />
 
             </LinearLayout>
-
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

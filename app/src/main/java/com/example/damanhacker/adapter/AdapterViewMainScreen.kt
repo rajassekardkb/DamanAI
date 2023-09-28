@@ -13,8 +13,7 @@ import com.example.damanhacker.utlities.Mapping
 
 
 class AdapterViewMainScreen(
-    private val list: ArrayList<DataModelMainData>,
-    private val context: Context
+    private val list: ArrayList<DataModelMainData>, private val context: Context
 ) : RecyclerView.Adapter<AdapterViewMainScreen.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,59 +33,56 @@ class AdapterViewMainScreen(
     }
 
     class ViewHolder(
-        private var listItemBinding: MainListItemBinding,
-        private var context: Context
-    ) :
-        RecyclerView.ViewHolder(listItemBinding.root) {
+        private var listItemBinding: MainListItemBinding, private var context: Context
+    ) : RecyclerView.ViewHolder(listItemBinding.root) {
         fun bindItem(data: DataModelMainData) {
-            listItemBinding.textPeriod.text =
-                DateUtilities().getTime(data.period) + " -->" + data.period.toString()
+            listItemBinding.textTime.text = DateUtilities().getTime(data.period)
+            listItemBinding.textPeriod.text = data.period.toString()
             listItemBinding.textNumber.text = data.number.toString()
-            val color = Mapping().getColor(data.number)
-
-            if (data.period % 10 == 4) {
-                listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.item_select))
+            // val color = Mapping().getColor(data.number)
+            listItemBinding.textValues.text = Mapping().getColor(data.number)
+            if (data.number == 0 || data.number == 5) {
+                listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.item_select_back))
             } else {
                 listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.white))
             }
             when (data.number) {
                 5, 6, 7, 8, 9 -> {
-                    listItemBinding.textColor.text = "Big"
+                    listItemBinding.textColor.text = "B"
                 }
 
                 0, 1, 2, 3, 4 -> {
-                    listItemBinding.textColor.text = "Small"
-                }
-
-            }
-
-
-            when (color) {
-                "RV" -> {
-                    listItemBinding.ivGreen.visibility = View.GONE
-                    listItemBinding.ivRed.visibility = View.VISIBLE
-                    listItemBinding.ivViolet.visibility = View.VISIBLE
-                }
-
-                "GV" -> {
-                    listItemBinding.ivGreen.visibility = View.VISIBLE
-                    listItemBinding.ivRed.visibility = View.GONE
-                    listItemBinding.ivViolet.visibility = View.VISIBLE
-
-                }
-
-                "R" -> {
-                    listItemBinding.ivGreen.visibility = View.GONE
-                    listItemBinding.ivRed.visibility = View.VISIBLE
-                    listItemBinding.ivViolet.visibility = View.GONE
-                }
-
-                "G" -> {
-                    listItemBinding.ivGreen.visibility = View.VISIBLE
-                    listItemBinding.ivRed.visibility = View.GONE
-                    listItemBinding.ivViolet.visibility = View.GONE
+                    listItemBinding.textColor.text = "S"
                 }
             }
+            /*
+                        when (color) {
+                            "RV" -> {
+                                listItemBinding.ivGreen.visibility = View.GONE
+                                listItemBinding.ivRed.visibility = View.VISIBLE
+                                listItemBinding.ivViolet.visibility = View.VISIBLE
+                            }
+
+                            "GV" -> {
+                                listItemBinding.ivGreen.visibility = View.VISIBLE
+                                listItemBinding.ivRed.visibility = View.GONE
+                                listItemBinding.ivViolet.visibility = View.VISIBLE
+
+                            }
+
+                            "R" -> {
+                                listItemBinding.ivGreen.visibility = View.GONE
+                                listItemBinding.ivRed.visibility = View.VISIBLE
+                                listItemBinding.ivViolet.visibility = View.GONE
+                            }
+
+                            "G" -> {
+                                listItemBinding.ivGreen.visibility = View.VISIBLE
+                                listItemBinding.ivRed.visibility = View.GONE
+                                listItemBinding.ivViolet.visibility = View.GONE
+                            }
+                        }
+            */
         }
     }
 
