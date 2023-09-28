@@ -1,6 +1,5 @@
 package com.example.damanhacker.database;
 
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -111,12 +110,27 @@ public class DBHandler extends SQLiteOpenHelper {
         return count;
     }
 
+    public int getCheck(String date, String period) {
+        int count = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(DM_SNO) FROM " + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE + "='" + date + "' " + AND + DM_PERIOD + "='" + period + "'", null);
+        if (c.moveToFirst()) {
+            do {
+                // Passing values
+                count = Integer.parseInt(c.getString(0));
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return count;
+    }
+
     public ArrayList<DataModelMainData> getData(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<DataModelMainData> listValue = new ArrayList<>();
         Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR +
                 CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE
-                + "='" + date + "' ORDER BY "+DM_PERIOD+" DESC", null);
+                + "='" + date + "' ORDER BY " + DM_PERIOD + " DESC", null);
         if (c.moveToFirst()) {
             do {
                 listValue.add(new DataModelMainData(
@@ -133,10 +147,12 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return listValue;
     }
-    public ArrayList<DataModelMainData>getDataRaw (String date) {
+    public ArrayList<DataModelMainData> getDataProcess(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<DataModelMainData> listValue = new ArrayList<>();
-        Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR + CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE + "='" + date + "'", null);
+        Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR +
+                CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE
+                + "='" + date + "' ORDER BY " + DM_PERIOD + " ASC", null);
         if (c.moveToFirst()) {
             do {
                 listValue.add(new DataModelMainData(
@@ -153,7 +169,8 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return listValue;
     }
-    public ArrayList<DataModelMainData>getDataForUpdate (String date) {
+
+    public ArrayList<DataModelMainData> getDataRaw(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<DataModelMainData> listValue = new ArrayList<>();
         Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR + CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE + "='" + date + "'", null);
@@ -174,26 +191,41 @@ public class DBHandler extends SQLiteOpenHelper {
         return listValue;
     }
 
-    public void updateCourse(ArrayList<DataModelMainData> listData, String date) {
+    public ArrayList<DataModelMainData> getDataForUpdate(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<DataModelMainData> listValue = new ArrayList<>();
+        Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR + CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE + "='" + date + "'", null);
+        if (c.moveToFirst()) {
+            do {
+                listValue.add(new DataModelMainData(
+                        c.getInt(0),
+                        c.getInt(1),
+                        c.getInt(2),
+                        c.getString(3),
+                        c.getString(4),
+                        c.getString(5),
+                        c.getInt(6)));
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return listValue;
+    }
+
+    public void InsertDataMaster(DataModelMainData data) {
 
         // calling a method to get writable database.
         SQLiteDatabase db = this.getWritableDatabase();
-
-        for (int i = 0; i < listData.size(); i++) {
-            ContentValues values = new ContentValues();
-            DataModelMainData data = listData.get(i);
-            int number = data.getNumber() % 10;
-            String value = new Mapping().getValue(number);
-            String color = new Mapping().getColor(number);
-            values.put(DM_NUMBER, number);
-            values.put(DM_VALUE, value);
-            values.put(DM_COLOR, color);
-            values.put(DM_FLAG, "1");
-            db.update(TABLE_NAME_DAMAN_SERVER, values, DM_SNO + "= ?", new String[]{data.getSno() + ""});
-        }
-
-        // on below line we are calling a update method to update our database and passing our values.
-        // and we are comparing it with name of our course which is stored in original name variable.
+        //  for (int i = 0; i < listData.size(); i++) {
+        ContentValues values = new ContentValues();
+        values.put(DM_NUMBER, data.getNumber());
+        values.put(DM_VALUE, data.getValue());
+        values.put(DM_COLOR, data.getColor());
+        values.put(DM_FLAG, "1");
+        values.put(DM_DATE, data.getDate());
+        values.put(DM_PERIOD, data.getPeriod());
+        db.insert(TABLE_NAME_DAMAN_SERVER, null, values);
+        //   }
 
         db.close();
     }

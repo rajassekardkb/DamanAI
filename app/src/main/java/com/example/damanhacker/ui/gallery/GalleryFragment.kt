@@ -48,7 +48,7 @@ class GalleryFragment : Fragment(), simpleListener {
         }
         binding.buttonSubmit.setOnClickListener {
 
-            dbHandler.updateCourse(valuesList, DateUtilities().getCurrentDate())
+           // dbHandler.updateCourse(valuesList, DateUtilities().getCurrentDate())
             //openCalender()
 
         }

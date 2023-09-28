@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,18 +12,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterViewMainScreen
-import com.example.damanhacker.api.apiInterface.DamanServerRepository
 import com.example.damanhacker.api.apiInterface.Repository
 import com.example.damanhacker.api.retrofit.RetrofitHelper
-import com.example.damanhacker.api.retrofit.RetrofitHelperDaman
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.FragmentHomeBinding
 import com.example.damanhacker.model.DamanRequestGetData
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.RequestGetData
-import com.example.damanhacker.utlities.DateUtilities
+import com.example.damanhacker.utlities.UtlString.Companion.DATE
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 
 class HomeFragment : Fragment() {
@@ -43,7 +39,7 @@ class HomeFragment : Fragment() {
             inflater, R.layout.fragment_home, container, false
         )
 
-        val requestGetData= DamanRequestGetData(
+        val requestGetData = DamanRequestGetData(
             pageSize = "10",
             pageNo = "1",
             typeId = "1",
@@ -52,9 +48,9 @@ class HomeFragment : Fragment() {
             signature = "E3A6C6F8041EF25EF7D8C2FF26C401E6",
             timestamp = "1695143339"
         );
-        val requestData= RequestGetData(
+        val requestData = RequestGetData(
             CHK = "GET_DAMAN_LIST",
-            DATE = "24-09-2023"
+            DATE = DATE
         );
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         val quotesApi = RetrofitHelper.getInstance().create(Repository::class.java)
@@ -63,15 +59,14 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             // println("rajasekar--->: " + values.size)
             try {
-              val response=  quotesApi.getData(requestData)
-
+                val response = quotesApi.getData(requestData)
                 setupRecyclerView(response.body()?.values!!)
 
-             }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-           // date = DateUtilities().getCurrentDate()
+            // date = DateUtilities().getCurrentDate()
             //prepare(date)
             // values = result.body()?.values!!
             //setupRecyclerView(dbHandler.getData(date))
@@ -104,13 +99,13 @@ class HomeFragment : Fragment() {
             addItemDecoration(itemDecoration)
         }
 
-        val rawListSize = dbHandler.getDataRaw(date)
-        if (rawListSize.size > 0) {
+       // val rawListSize = dbHandler.getDataRaw(date)
+      //  if (rawListSize.size > 0) {
             //CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(rawListSize)
             //CheckNumberBasics().patternCheckBasedOnSerialNumber(rawListSize)
             //CheckViolet().patternCheckBasedOnSerialNumber(rawListSize)
             //CheckNumberBasicsMaxCount().patternCheckBasedOnSerialNumber(rawListSize)
-        }
+       // }
         //requireActivity().finish()
     }
 

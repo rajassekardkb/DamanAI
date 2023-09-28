@@ -1,5 +1,6 @@
 package com.example.damanhacker.utlities
 
+import com.example.damanhacker.utlities.UtlString.Companion.DATE
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -7,8 +8,8 @@ class DateUtilities {
     fun getCurrentDate(): String {
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c: Calendar = Calendar.getInstance()
-        //return sdf.format(c.time)
-        return "12-09-2023"
+       // return sdf.format(c.time)
+        return DATE
     }
 
     fun getTime(period: Int): String {

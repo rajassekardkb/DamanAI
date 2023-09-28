@@ -20,12 +20,12 @@ import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.ui.slideshow.NumericViewModel
-import com.example.damanhacker.utlities.CheckNumberBasics
 import com.example.damanhacker.utlities.CheckViolet
+import com.example.damanhacker.utlities.CheckVioletThreePattern
 import com.example.damanhacker.utlities.DateUtilities
 import com.example.damanhacker.utlities.Mapping
+import com.example.damanhacker.utlities.UtlString.Companion.DATE
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class NumericFragment : Fragment(), onResultList {
 
@@ -46,7 +46,7 @@ class NumericFragment : Fragment(), onResultList {
             inflater, R.layout.numeric_fragment, container, false
         )
         dbHandler = DBHandler(context)
-        listData = dbHandler.getDataRaw(DateUtilities().getCurrentDate())
+       // listData = dbHandler.getDataRaw(DateUtilities().getCurrentDate())
 
         //CheckNumberBasics().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -54,18 +54,29 @@ class NumericFragment : Fragment(), onResultList {
             try {
                 val quotesApi = RetrofitHelper.getInstance().create(Repository::class.java)
                 val requestData = RequestGetData(
-                    CHK = "GET_DAMAN_LIST", DATE = "24-09-2023"
+                    CHK = "GET_DAMAN_LIST", DATE = DATE
                 );
                 val response = quotesApi.getData(requestData)
                 listData = preparedata(response.body()?.values!!)
 
-                CheckViolet().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
+                listData.forEachIndexed { index, data ->
+                   // val data = listData[index]
+                    if (dbHandler.getCheck(data.date, data.period.toString()) == 0) {
+                        dbHandler.InsertDataMaster(data)
+                    }
+
+                }
+                listData = ArrayList()
+
+                listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
 
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-             // values = result.body()?.values!!
+            // values = result.body()?.values!!
             //setupRecyclerView(dbHandler.getData(date))
 
         }
