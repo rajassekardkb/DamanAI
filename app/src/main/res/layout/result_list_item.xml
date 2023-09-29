@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
         android:layout_marginStart="@dimen/_17ssp"
-        android:textSize="@dimen/_20ssp"
+        android:textSize="@dimen/_13ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

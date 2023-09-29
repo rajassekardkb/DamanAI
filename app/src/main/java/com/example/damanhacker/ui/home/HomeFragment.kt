@@ -98,6 +98,11 @@ class HomeFragment : Fragment() {
             adapter = AdapterViewMainScreen(value, context)
             addItemDecoration(itemDecoration)
         }
+        binding.recyclerViewFs.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = AdapterViewMainScreen(value, context)
+            addItemDecoration(itemDecoration)
+        }
 
        // val rawListSize = dbHandler.getDataRaw(date)
       //  if (rawListSize.size > 0) {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class CheckViolet {
     int matchingClear = 0;
-    int MaxRepeatedCount = 6;
+    int MaxRepeatedCount = 4;
     int loopMax = 0;
     int serialNumberPositionMoveForward = 0;
     ArrayList<DataModelMainData> dataList;

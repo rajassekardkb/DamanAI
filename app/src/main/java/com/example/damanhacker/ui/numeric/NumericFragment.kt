@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
+import com.example.damanhacker.adapter.AdapterPattern
 import com.example.damanhacker.adapter.AdapterResult
 import com.example.damanhacker.api.apiInterface.Repository
 import com.example.damanhacker.api.retrofit.RetrofitHelper
@@ -19,11 +20,9 @@ import com.example.damanhacker.databinding.NumericFragmentBinding
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.RequestGetData
+import com.example.damanhacker.model.patternData
 import com.example.damanhacker.ui.slideshow.NumericViewModel
-import com.example.damanhacker.utlities.CheckViolet
-import com.example.damanhacker.utlities.CheckVioletThreePattern
-import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.Mapping
+import com.example.damanhacker.utlities.*
 import com.example.damanhacker.utlities.UtlString.Companion.DATE
 import kotlinx.coroutines.launch
 
@@ -33,10 +32,6 @@ class NumericFragment : Fragment(), onResultList {
     private var listData = ArrayList<DataModelMainData>()
     private var position: Int = 0
     private lateinit var dbHandler: DBHandler
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -46,12 +41,23 @@ class NumericFragment : Fragment(), onResultList {
             inflater, R.layout.numeric_fragment, container, false
         )
         dbHandler = DBHandler(context)
-       // listData = dbHandler.getDataRaw(DateUtilities().getCurrentDate())
+        // listData = dbHandler.getDataRaw(DateUtilities().getCurrentDate())
 
         //CheckNumberBasics().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
         viewLifecycleOwner.lifecycleScope.launch {
             // println("rajasekar--->: " + values.size)
             try {
+                val pattern = arrayListOf(
+                    patternData("number 6", 1),
+                    patternData("number 9", 2),
+                    patternData("Violet", 3),
+                    patternData("5 or 0->3", 4),
+                    patternData("SNo", 5),
+                    patternData("Sno", 6),
+                    patternData("number 6", 7),
+                )
+
+                patternRecyclerView(pattern)
                 val quotesApi = RetrofitHelper.getInstance().create(Repository::class.java)
                 val requestData = RequestGetData(
                     CHK = "GET_DAMAN_LIST", DATE = DATE
@@ -60,7 +66,7 @@ class NumericFragment : Fragment(), onResultList {
                 listData = preparedata(response.body()?.values!!)
 
                 listData.forEachIndexed { index, data ->
-                   // val data = listData[index]
+                    // val data = listData[index]
                     if (dbHandler.getCheck(data.date, data.period.toString()) == 0) {
                         dbHandler.InsertDataMaster(data)
                     }
@@ -70,7 +76,6 @@ class NumericFragment : Fragment(), onResultList {
 
                 listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
 
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -89,9 +94,9 @@ class NumericFragment : Fragment(), onResultList {
         super.onDestroyView()
     }
 
-    fun preparedata(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
+    private fun preparedata(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
         listData = ArrayList()
-        data.forEachIndexed { index, element ->
+        data.forEachIndexed { _, element ->
             listData.add(
                 DataModelMainData(
                     sno = element.sno,
@@ -101,8 +106,6 @@ class NumericFragment : Fragment(), onResultList {
                     color = Mapping().getColor(element.number),
                     date = element.date,
                     flag = 0
-
-
                 )
             )
         }
@@ -117,8 +120,52 @@ class NumericFragment : Fragment(), onResultList {
             adapter = AdapterResult(data, requireContext())
             addItemDecoration(itemDecoration)
         }
+    }
 
+    override fun onPatternSelection(pattern: Int) {
+        when (pattern) {
 
+            1 -> {
+                CheckNumberBasics().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment
+                )
+            }
+            2 -> {
+
+            }
+            3 -> {
+                CheckViolet().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment
+                )
+            }
+            4 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment
+                )
+            }
+            5 -> {
+
+            }
+            6 -> {
+
+            }
+            7 -> {
+            }
+        }
+    }
+
+    private fun patternRecyclerView(data: ArrayList<patternData>) {
+        val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
+        binding.recyclerViewPattern.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = AdapterPattern(
+                list = data,
+                context = requireContext(),
+                onResultList_ = this@NumericFragment
+            )
+            addItemDecoration(itemDecoration)
+        }
     }
 }
 

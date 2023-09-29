@@ -1,6 +1,8 @@
 package com.example.damanhacker.utlities;
 
 
+import static java.sql.DriverManager.println;
+
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 
 public class CheckNumberBasics {
     int matchingClear = 0;
-    int MaxRepeatedCount = 4;
+    int MaxRepeatedCount = 3;
     int loopMax = 0;
     int serialNumberPositionMoveForward = 0;
     ArrayList<DataModelMainData> dataList;
@@ -17,6 +19,7 @@ public class CheckNumberBasics {
     public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult) {
         this.dataList = _;
         onResultList_ = onResult;
+        println("patternCheckBasedOnSerialNumber-->"+dataList.size());
 
         picSerialNumberBasics();
     }
