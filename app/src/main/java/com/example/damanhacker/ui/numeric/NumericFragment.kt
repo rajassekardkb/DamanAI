@@ -58,21 +58,6 @@ class NumericFragment : Fragment(), onResultList {
                 )
 
                 patternRecyclerView(pattern)
-                val quotesApi = RetrofitHelper.getInstance().create(Repository::class.java)
-                val requestData = RequestGetData(
-                    CHK = "GET_DAMAN_LIST", DATE = DATE
-                );
-                val response = quotesApi.getData(requestData)
-                listData = preparedata(response.body()?.values!!)
-
-                listData.forEachIndexed { index, data ->
-                    // val data = listData[index]
-                    if (dbHandler.getCheck(data.date, data.period.toString()) == 0) {
-                        dbHandler.InsertDataMaster(data)
-                    }
-
-                }
-                listData = ArrayList()
 
                 listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
 

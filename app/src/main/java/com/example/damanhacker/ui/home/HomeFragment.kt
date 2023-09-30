@@ -1,29 +1,26 @@
 package com.example.damanhacker.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterViewMainScreen
-import com.example.damanhacker.api.apiInterface.Repository
-import com.example.damanhacker.api.retrofit.RetrofitHelper
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.FragmentHomeBinding
-import com.example.damanhacker.model.DamanRequestGetData
+import com.example.damanhacker.intefaces.onResponse
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.UtlString.Companion.DATE
-import kotlinx.coroutines.launch
+import com.example.damanhacker.viewModel.MainViewModel
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), onResponse {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var dbHandler: DBHandler
@@ -34,43 +31,15 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        //CheckSerialNumberBasics().patternCheckBasedOnSerialNumber()
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
-
-        val requestGetData = DamanRequestGetData(
-            pageSize = "10",
-            pageNo = "1",
-            typeId = "1",
-            language = "0",
-            random = "af39b6ef510c4656bd742758ee1b9c49",
-            signature = "E3A6C6F8041EF25EF7D8C2FF26C401E6",
-            timestamp = "1695143339"
-        );
-        val requestData = RequestGetData(
-            CHK = "GET_DAMAN_LIST",
-            DATE = DATE
-        );
-        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        val quotesApi = RetrofitHelper.getInstance().create(Repository::class.java)
         dbHandler = DBHandler(context)
-        //GlobalScope.launch {
-        viewLifecycleOwner.lifecycleScope.launch {
-            // println("rajasekar--->: " + values.size)
-            try {
-                val response = quotesApi.getData(requestData)
-                setupRecyclerView(response.body()?.values!!)
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            // date = DateUtilities().getCurrentDate()
-            //prepare(date)
-            // values = result.body()?.values!!
-            //setupRecyclerView(dbHandler.getData(date))
-
+        try {
+            binding.progress.visibility = View.VISIBLE
+            MainViewModel(requireContext(), this@HomeFragment).getData()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
         return binding.root
@@ -90,6 +59,7 @@ class HomeFragment : Fragment() {
         // binding = null
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setupRecyclerView(value: ArrayList<DataModelMainData>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
@@ -104,14 +74,6 @@ class HomeFragment : Fragment() {
             addItemDecoration(itemDecoration)
         }
 
-       // val rawListSize = dbHandler.getDataRaw(date)
-      //  if (rawListSize.size > 0) {
-            //CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(rawListSize)
-            //CheckNumberBasics().patternCheckBasedOnSerialNumber(rawListSize)
-            //CheckViolet().patternCheckBasedOnSerialNumber(rawListSize)
-            //CheckNumberBasicsMaxCount().patternCheckBasedOnSerialNumber(rawListSize)
-       // }
-        //requireActivity().finish()
     }
 
     private fun prepare(date: String) {
@@ -133,5 +95,16 @@ class HomeFragment : Fragment() {
 
 
     }
+
+    override fun onSuccess(list: ArrayList<DataModelMainData>) {
+        binding.progress.visibility = View.GONE
+        setupRecyclerView(list)
+
+    }
+
+    override fun Error(data: String) {
+        binding.progress.visibility = View.GONE
+    }
+
 
 }
