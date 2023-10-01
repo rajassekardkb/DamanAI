@@ -95,7 +95,6 @@ class DuplicateNumberFragment : Fragment(), onResultList {
             year, month, day
         )
         datePickerDialog.show()
-
     }
 
 }
