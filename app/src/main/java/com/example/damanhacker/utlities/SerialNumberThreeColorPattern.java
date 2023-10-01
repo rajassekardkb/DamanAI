@@ -8,7 +8,7 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class CheckVioletThreePattern {
+public class SerialNumberThreeColorPattern {
     int matchingClear = 0;
     int number = 0;
 
@@ -35,7 +35,7 @@ public class CheckVioletThreePattern {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            if (data.getNumber() == number) {
+            if (data.getPeriod() % 10 == number) {
 
                 getMatch(serialNumberPositionMoveForward);
             }
@@ -55,7 +55,7 @@ public class CheckVioletThreePattern {
         int matchPosition = currentPosition;
         if (dataList.size() == matchPosition) return;
         StringBuilder value = new StringBuilder();
-        String matchValue = dataList.get(matchPosition).getValue();
+        String matchValue = dataList.get(matchPosition).getColor();
         String currentValue;
         loopMax = 0;
         matchingClear = 0;
@@ -63,7 +63,7 @@ public class CheckVioletThreePattern {
         value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\n\n");
 
         for (int i = matchPosition; i < dataList.size(); i++) {
-            currentValue = dataList.get(i).getValue();
+            currentValue = dataList.get(i).getColor();
             // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
 
             if ((valueMatching(currentValue, matchValue))) {
@@ -107,19 +107,23 @@ public class CheckVioletThreePattern {
         System.out.println(str);
     }
 
-    public String convertOpositeValue(String str) {
+    public String convertOpositeValue(String str_) {
+        String str = String.valueOf(str_.charAt(0));
+
         String returnValue;
-        if (str.equals("Small")) {
-            returnValue = "Big";
+        if (str.equals("R")) {
+            returnValue = "G";
         } else {
-            returnValue = "Small";
+            returnValue = "R";
         }
         matchPattern = 0;
         return returnValue;
     }
 
-    public boolean valueMatching(String currentValue, String matchValue) {
-        // System.out.println(currentValue + ":" + matchValue);
+    public boolean valueMatching(String currentValue_, String matchValue_) {
+        String currentValue = String.valueOf(currentValue_.charAt(0));
+        String matchValue = String.valueOf(matchValue_.charAt(0));
+        //System.out.println(currentValue + ":" + matchValue);
         return !matchValue.equals(currentValue);
     }
 }

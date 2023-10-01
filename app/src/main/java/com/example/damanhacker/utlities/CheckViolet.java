@@ -1,6 +1,8 @@
 package com.example.damanhacker.utlities;
 
 
+import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
+
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -8,8 +10,9 @@ import java.util.ArrayList;
 
 public class CheckViolet {
     int matchingClear = 0;
-    int MaxRepeatedCount = 4;
+
     int loopMax = 0;
+    int number = 0;
     int serialNumberPositionMoveForward = 0;
     ArrayList<DataModelMainData> dataList;
     ArrayList<String> finalResult = new ArrayList<>();
@@ -20,10 +23,10 @@ public class CheckViolet {
         picSerialNumberBasics();
     }
 
-    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult) {
+    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult, int number_) {
         this.dataList = _;
         onResultList_ = onResult;
-
+        this.number = number_;
         picSerialNumberBasics();
     }
 
@@ -31,7 +34,7 @@ public class CheckViolet {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            if (data.getColor().equals("RV") || data.getColor().equals("GV")) {
+            if (data.getNumber() == number) {
                 getMatch(serialNumberPositionMoveForward);
             }
             serialNumberPositionMoveForward++;
@@ -86,7 +89,7 @@ public class CheckViolet {
 
 
     public void addValue(String value) {
-        if (matchingClear > MaxRepeatedCount) {
+        if (matchingClear >= MAXPATTERN) {
             finalResult.add(value + "--Level ------->" + loopMax);
         }
         matchingClear = 0;

@@ -8,7 +8,7 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class CheckVioletThreePattern {
+public class SerialNumberThreePattern {
     int matchingClear = 0;
     int number = 0;
 
@@ -35,7 +35,7 @@ public class CheckVioletThreePattern {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            if (data.getNumber() == number) {
+            if (data.getPeriod() % 10 == number) {
 
                 getMatch(serialNumberPositionMoveForward);
             }

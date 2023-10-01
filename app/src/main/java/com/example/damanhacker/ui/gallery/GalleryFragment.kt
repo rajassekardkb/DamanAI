@@ -6,31 +6,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
-import com.example.damanhacker.adapter.AdapterUpdate
+import com.example.damanhacker.adapter.AdapterPattern
+import com.example.damanhacker.adapter.AdapterResult
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.FragmentGalleryBinding
-import com.example.damanhacker.listeners.simpleListener
+import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
+import com.example.damanhacker.model.patternData
+import com.example.damanhacker.ui.slideshow.NumericViewModel
 import com.example.damanhacker.utlities.DateUtilities
-import kotlinx.coroutines.launch
-import java.util.Calendar
+import com.example.damanhacker.utlities.Mapping
+import com.example.damanhacker.utlities.SerialNumberThreeColorPattern
+import java.util.*
 
-class GalleryFragment : Fragment(), simpleListener {
+class GalleryFragment : Fragment(), onResultList {
 
     private lateinit var binding: FragmentGalleryBinding
     private lateinit var dbHandler: DBHandler
     private var valuesList = ArrayList<DataModelMainData>()
     private var prepareList = ArrayList<DataModelMainData>()
     private var selectedDate = ""
+    private var listData = ArrayList<DataModelMainData>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,17 +44,29 @@ class GalleryFragment : Fragment(), simpleListener {
         )
         dbHandler = DBHandler(context)
 
-        val homeViewModel = ViewModelProvider(this)[GalleryViewModel::class.java]
-        viewLifecycleOwner.lifecycleScope.launch {
-            valuesList = dbHandler.getData(DateUtilities().getCurrentDate())
-            setupRecyclerView(valuesList)
+        val slideshowViewModel = ViewModelProvider(this)[NumericViewModel::class.java]
+        binding.TextViewDate.setOnClickListener {
+            openCalender()
         }
-        binding.buttonSubmit.setOnClickListener {
 
-           // dbHandler.updateCourse(valuesList, DateUtilities().getCurrentDate())
-            //openCalender()
+        dbHandler = DBHandler(context)
+        binding.TextViewDate.text = DateUtilities().getCurrentDate()
+        listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
 
-        }
+        val pattern = arrayListOf(
+            patternData("0", 0),
+            patternData("1", 1),
+            patternData("2", 2),
+            patternData("3", 3),
+            patternData("4", 4),
+            patternData("5", 5),
+            patternData("6", 6),
+            patternData("7", 7),
+            patternData("8", 8),
+            patternData("9", 9)
+        )
+
+        patternRecyclerView(pattern)
 
         return binding.root
     }
@@ -69,12 +84,48 @@ class GalleryFragment : Fragment(), simpleListener {
         // binding = null
     }
 
-    private fun setupRecyclerView(value: ArrayList<DataModelMainData>) {
+    private fun preparedata(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
+        listData = ArrayList()
+        data.forEachIndexed { _, element ->
+            listData.add(
+                DataModelMainData(
+                    sno = element.sno,
+                    period = element.period,
+                    number = element.number,
+                    value = Mapping().getValue(element.number),
+                    color = Mapping().getColor(element.number),
+                    date = element.date,
+                    flag = 0
+                )
+            )
+        }
+        return listData
+    }
+
+    override fun onItemText(data: ArrayList<String>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = AdapterUpdate(value, this@GalleryFragment)
+            adapter = AdapterResult(data, requireContext())
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    override fun onPatternSelection(pattern: Int) {
+        SerialNumberThreeColorPattern().patternCheckBasedOnSerialNumber(
+            listData, this@GalleryFragment, pattern
+        )
+    }
+
+    private fun patternRecyclerView(data: ArrayList<patternData>) {
+        val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
+        binding.recyclerViewPattern.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = AdapterPattern(
+                list = data, context = requireContext(), onResultList_ = this@GalleryFragment
+            )
             addItemDecoration(itemDecoration)
         }
     }
@@ -98,7 +149,7 @@ class GalleryFragment : Fragment(), simpleListener {
             // on below line we are passing context.
             requireContext(),
             { _, year, monthOfYear, dayOfMonth ->
-                MONTH = if (monthOfYear < 10) {
+                MONTH = if (monthOfYear < 9) {
                     "0" + (monthOfYear + 1).toString()
                 } else {
                     (monthOfYear + 1).toString()
@@ -108,9 +159,10 @@ class GalleryFragment : Fragment(), simpleListener {
                 } else {
                     dayOfMonth.toString()
                 }
-                selectedDate = ("$DAY-$MONTH-$year").also {
+                binding.TextViewDate.text = ("$DAY-$MONTH-$year").also {
                     println(it)
                 }
+                listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
             },
             // on below line we are passing year, month
             // and day for the selected date in our date picker.
@@ -122,21 +174,5 @@ class GalleryFragment : Fragment(), simpleListener {
         // to display our date picker dialog.
         datePickerDialog.show()
 
-    }
-
-    fun onItemClicked(data: String, number: Int, editText: EditText) {
-        editText.isFocusableInTouchMode = true
-        println("Hello Bro--->" + data)
-    }
-
-    override fun onItemClicked(data: DataModelMainData, number: Int, editText: EditText) {
-        println("Hello Bro--->" + data.period + ":" + number)
-        //dbHandler.updateCourseSingle(data,number)
-
-    }
-
-    override fun onUpdateData(data: DataModelMainData, number: Int, btn: AppCompatButton) {
-        dbHandler.updateCourseSingle(data, number)
-        btn.setBackgroundResource(R.drawable.round_btn_selected)
     }
 }

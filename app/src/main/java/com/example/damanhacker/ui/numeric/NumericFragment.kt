@@ -13,17 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterPattern
 import com.example.damanhacker.adapter.AdapterResult
-import com.example.damanhacker.api.apiInterface.Repository
-import com.example.damanhacker.api.retrofit.RetrofitHelper
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.NumericFragmentBinding
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.ui.slideshow.NumericViewModel
 import com.example.damanhacker.utlities.*
-import com.example.damanhacker.utlities.UtlString.Companion.DATE
 import kotlinx.coroutines.launch
 
 class NumericFragment : Fragment(), onResultList {
@@ -41,30 +37,29 @@ class NumericFragment : Fragment(), onResultList {
             inflater, R.layout.numeric_fragment, container, false
         )
         dbHandler = DBHandler(context)
-        // listData = dbHandler.getDataRaw(DateUtilities().getCurrentDate())
-
-        //CheckNumberBasics().patternCheckBasedOnSerialNumber(listData, this@NumericFragment)
         viewLifecycleOwner.lifecycleScope.launch {
-            // println("rajasekar--->: " + values.size)
-            try {
-                val pattern = arrayListOf(
-                    patternData("number 6", 1),
-                    patternData("number 9", 2),
-                    patternData("Violet", 3),
-                    patternData("5 or 0->3", 4),
-                    patternData("SNo", 5),
-                    patternData("Sno", 6),
-                    patternData("number 6", 7),
-                )
+            val pattern = arrayListOf(
+                patternData("9", 1),
+                patternData("6", 2),
+                patternData("VR", 3),
+                patternData("VG", 4),
+                patternData("0:3", 5),
+                patternData("5:3", 6),
+                patternData("0:3", 7),
+                patternData("1:3", 8),
+                patternData("2:3", 9),
+                patternData("3:3", 10),
+                patternData("4:3", 11),
+                patternData("5:3", 12),
+                patternData("6:3", 13),
+                patternData("7:3", 14),
+                patternData("8:3", 15),
+                patternData("9:3", 16),
+            )
 
-                patternRecyclerView(pattern)
+            patternRecyclerView(pattern)
 
-                listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
 
             // values = result.body()?.values!!
             //setupRecyclerView(dbHandler.getData(date))
@@ -112,29 +107,84 @@ class NumericFragment : Fragment(), onResultList {
 
             1 -> {
                 CheckNumberBasics().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment
+                    listData, this@NumericFragment, 9
                 )
             }
             2 -> {
+                CheckNumberBasics().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 6
+                )
 
             }
             3 -> {
                 CheckViolet().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment
+                    listData, this@NumericFragment, 0
                 )
             }
             4 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment
+                CheckViolet().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 5
                 )
             }
             5 -> {
-
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 0
+                )
             }
             6 -> {
-
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 5
+                )
             }
             7 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 0
+                )
+            }
+            8 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 1
+                )
+            }
+            9 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 2
+                )
+            }
+            10 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 3
+                )
+            }
+            11 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 4
+                )
+            }
+            12 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 5
+                )
+            }
+            13 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 6
+                )
+            }
+            14 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 7
+                )
+            }
+            15 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 8
+                )
+            }
+            16 -> {
+                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 9
+                )
             }
         }
     }
@@ -145,9 +195,7 @@ class NumericFragment : Fragment(), onResultList {
         binding.recyclerViewPattern.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = AdapterPattern(
-                list = data,
-                context = requireContext(),
-                onResultList_ = this@NumericFragment
+                list = data, context = requireContext(), onResultList_ = this@NumericFragment
             )
             addItemDecoration(itemDecoration)
         }

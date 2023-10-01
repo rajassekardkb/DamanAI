@@ -1,14 +1,16 @@
 package com.example.damanhacker.utlities;
 
 
+import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
+
 import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
 public class CheckSerialNumberBasics {
     int matchingClear = 0;
-    int MaxRepeatedCount = 7;
-    int serialNext = 0;
+
+     int serialNext = 0;
     int loopMax = 0;
     int serialCheck = 0;
     int PatternSerialNumber = 0;
@@ -107,7 +109,7 @@ public class CheckSerialNumberBasics {
 
     public void addValue(String value) {
 
-        if (matchingClear >= MaxRepeatedCount) {
+        if (matchingClear >= MAXPATTERN) {
 
             finalResult.add(value + "\n " + "->" + matchingClear);
 

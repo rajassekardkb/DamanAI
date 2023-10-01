@@ -56,7 +56,6 @@ class HomeFragment : Fragment(), onResponse {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // binding = null
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

@@ -1,6 +1,8 @@
 package com.example.damanhacker.utlities;
 
 
+import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
+
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 
 public class CheckNumberBasicsMaxCount {
     int matchingClear = 0;
-    int MaxRepeatedCount = 0;
     int loopMax = 0;
     int chkPoint = 0;
     int serialNumberPositionMoveForward = 0;
@@ -60,6 +61,7 @@ public class CheckNumberBasicsMaxCount {
     public void getMatch(int currentPosition) {
         matchingClear = 0;
         StringBuilder value = new StringBuilder();
+        value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod()));
 
         value.append("\t").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append(" --->>").append(chkPoint).append("\n\n");
         value.append(dataList.get(currentPosition).getPeriod()).append("    :    ").append(dataList.get(currentPosition).getNumber()).append("    :    ").append(dataList.get(currentPosition).getNumber()).append("\n");
@@ -88,7 +90,7 @@ public class CheckNumberBasicsMaxCount {
 
     public void addValue(String value) {
 
-        if (matchingClear >= MaxRepeatedCount) {
+        if (matchingClear >= MAXPATTERN) {
 
             finalResult.add(value + "--Level ------->" + loopMax);
         }

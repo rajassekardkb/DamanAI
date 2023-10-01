@@ -9,7 +9,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_1ssp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/_3ssp"
         app:cardElevation="@dimen/_7ssp"
@@ -21,7 +20,8 @@
             android:id="@+id/textResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_5ssp"
+            android:background="@drawable/selector"
+            android:padding="@dimen/_7ssp"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_13ssp"
             app:layout_constraintStart_toStartOf="parent"

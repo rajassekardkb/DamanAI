@@ -18,14 +18,11 @@ class AdapterPattern(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
             ResultListItemPatternBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(v, context)
+        return ViewHolder(v, context,onResultList_)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(list[position].name)
-        holder.itemView.setOnClickListener {
-            onResultList_.onPatternSelection(list[position].id)
-        }
+        holder.bindItem(list[position].name,list[position].id)
     }
 
     override fun getItemCount(): Int {
@@ -35,11 +32,15 @@ class AdapterPattern(
     class ViewHolder(
         private var listItemBinding: ResultListItemPatternBinding,
         private var context: Context,
-
+        var onResultList_: onResultList
         ) :
         RecyclerView.ViewHolder(listItemBinding.root) {
-        fun bindItem(data: String) {
+        fun bindItem(data: String,id:Int) {
             listItemBinding.textResult.text = data
+            listItemBinding.textResult.setOnClickListener {
+                onResultList_.onPatternSelection(id)
+            }
+
         }
     }
 

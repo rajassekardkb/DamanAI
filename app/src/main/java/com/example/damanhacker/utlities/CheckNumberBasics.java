@@ -1,6 +1,7 @@
 package com.example.damanhacker.utlities;
 
 
+import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
 import static java.sql.DriverManager.println;
 
 import com.example.damanhacker.intefaces.onResultList;
@@ -10,19 +11,21 @@ import java.util.ArrayList;
 
 public class CheckNumberBasics {
     int matchingClear = 0;
-    int MaxRepeatedCount = 3;
     int loopMax = 0;
     int serialNumberPositionMoveForward = 0;
+    int number = 0;
     ArrayList<DataModelMainData> dataList;
     ArrayList<String> finalResult = new ArrayList<>();
     onResultList onResultList_;
-    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult) {
+
+    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult, int number_) {
         this.dataList = _;
         onResultList_ = onResult;
-        println("patternCheckBasedOnSerialNumber-->"+dataList.size());
-
+        println("patternCheckBasedOnSerialNumber-->" + dataList.size());
+        this.number = number_;
         picSerialNumberBasics();
     }
+
     public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _) {
 
         this.dataList = _;
@@ -35,7 +38,7 @@ public class CheckNumberBasics {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
 
-            if (data.getNumber() == 6 ) {
+            if (data.getNumber() == number) {
                 //System.out.println("valueMatching-->" + dataList.get(serialNumberPositionMoveForward).getNumber());
                 lpc++;
                 getMatch(serialNumberPositionMoveForward);
@@ -87,7 +90,7 @@ public class CheckNumberBasics {
 
 
     public void addValue(String value) {
-        if (matchingClear > MaxRepeatedCount) {
+        if (matchingClear >= MAXPATTERN) {
             finalResult.add(value + "--Level ------->" + loopMax);
         }
         matchingClear = 0;

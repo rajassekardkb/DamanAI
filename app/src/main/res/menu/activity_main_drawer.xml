@@ -11,14 +11,14 @@
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/list" />
+            android:title="@string/serialNumberColor" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/dial" />
+            android:title="@string/serialNumberValue" />
         <item
             android:id="@+id/nav_numberSeries"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/numeric" />
+            android:title="@string/MultiCheck" />
     </group>
 </menu>

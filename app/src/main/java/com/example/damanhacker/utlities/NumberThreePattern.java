@@ -1,14 +1,12 @@
 package com.example.damanhacker.utlities;
 
 
-import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
-
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class CheckVioletThreePattern {
+public class NumberThreePattern {
     int matchingClear = 0;
     int number = 0;
 
@@ -35,10 +33,10 @@ public class CheckVioletThreePattern {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            if (data.getNumber() == number) {
+            //  if (data.getPeriod() % 10 == number) {
 
-                getMatch(serialNumberPositionMoveForward);
-            }
+            getMatch(serialNumberPositionMoveForward);
+            //  }
             serialNumberPositionMoveForward++;
         }
         if (onResultList_ != null) {
@@ -96,7 +94,7 @@ public class CheckVioletThreePattern {
 
 
     public void addValue(String value) {
-        if (matchingClear >= MAXPATTERN) {
+        if (matchingClear >= 1) {
             finalResult.add(value + "--Level ------->" + loopMax);
         }
         matchingClear = 0;
