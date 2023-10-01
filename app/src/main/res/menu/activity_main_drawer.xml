@@ -6,19 +6,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
             android:title="@string/serialNumberColor" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/serialNumberValue" />
         <item
             android:id="@+id/nav_numberSeries"
-            android:icon="@drawable/ic_menu_camera"
             android:title="@string/MultiCheck" />
+        <item
+            android:id="@+id/nav_duplicate"
+            android:title="@string/FindDuplicateNumber" />
     </group>
 </menu>

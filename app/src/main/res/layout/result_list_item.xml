@@ -5,28 +5,16 @@
     <data>
 
     </data>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardElevation="@dimen/_7ssp"
-        app:cardCornerRadius="@dimen/_3ssp"
-        android:layout_margin="@dimen/_1ssp"
-        app:cardBackgroundColor="@color/white"
-        app:cardMaxElevation="@dimen/_3ssp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        >
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_color"
         android:layout_marginStart="@dimen/_17ssp"
-        android:textSize="@dimen/_13ssp"
+        android:layout_marginTop="@dimen/_5ssp"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_15ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.cardview.widget.CardView>
-
 
 </layout>

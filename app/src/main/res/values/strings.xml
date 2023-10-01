@@ -11,6 +11,7 @@
     <string name="serialNumberColor">SerialNumberCheckColor</string>
     <string name="serialNumberValue">SerialNumberCheckValue</string>
     <string name="MultiCheck">MultiCheck</string>
-    <string name="dial">Dial</string>
-    <string name="numeric">Dial</string>
+    <string name="FindDuplicateNumber">FindDuplicateNumber</string>
+    <string name="numeric">FindNumeric</string>
+    <string name="slideshowFragment">SlideshowFragment</string>
 </resources>

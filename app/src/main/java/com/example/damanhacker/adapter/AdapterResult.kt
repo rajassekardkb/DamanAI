@@ -19,9 +19,6 @@ class AdapterResult(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(list[position])
-        holder.itemView.setOnClickListener {
-            //listener(animalList[position], position)
-        }
     }
 
     override fun getItemCount(): Int {
