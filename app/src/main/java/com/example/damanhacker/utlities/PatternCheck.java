@@ -1,49 +1,50 @@
 package com.example.damanhacker.utlities;
 
 import com.example.damanhacker.model.DataModelMainData;
-import com.example.damanhacker.model.returnData;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PatternCheck {
     StringBuilder value = new StringBuilder();
     ArrayList<String> finalResult = new ArrayList<>();
+
     public void patternCheckBasedOnSerialNumber() {
         ArrayList<DataModelMainData> dataList = new Mapping().getDummyData();
         DataModelMainData valueCurrent = dataList.get(0);
-        pickData(1, dataList, valueCurrent.getColor());
     }
 
-    public void pickData(int startPosition_, ArrayList<DataModelMainData> list, String matchValue) {
-        returnData returnDataVl = new returnData(startPosition_, matchValue);
-        StringBuilder value = new StringBuilder(matchValue);
-        int totalLoop = 0;
-        int matchingClear = 0;
+    public void pickData(ArrayList<String> list, String pattern) {
 
-        for (int i = startPosition_; i < list.size(); i++) {
-            totalLoop++;
-            String currentColor = list.get(i).getColor();
-
-            if (matchValue.equals(currentColor)) {
-                value.append(currentColor);
-                matchingClear++;
-                if (i == list.size() - 1 && matchingClear > 1) {
-                    finalResult.add(value.toString());
-                    System.out.println("if->last position--" + totalLoop);
-                }
-            } else {
-                if (matchingClear > 1) {
-                    finalResult.add(value.toString());
-                }
-                matchingClear = 0;
-                value.setLength(0); // Clear the StringBuilder
-                matchValue = currentColor;
-                value.append(matchValue);
-            }
+        StringBuilder concatenated = new StringBuilder();
+        for (String str : list) {
+            concatenated.append(str);
         }
 
-        for (String result : finalResult) {
-            System.out.println("Final--" + result);
+        // Check if the concatenated string matches the pattern
+        if (concatenated.toString().contains(pattern)) {
+            System.out.println("Pattern found in the ArrayList." + pattern);
+        } else {
+            System.out.println("Pattern not found in the ArrayList." + concatenated);
         }
     }
+
+    public void pickDataP(ArrayList<String> list, String pattern) {
+        StringBuilder concatenated = new StringBuilder();
+        for (String str : list) {
+            concatenated.append(str);
+        }
+
+        // Use regular expression and Matcher to find matches and positions
+        Pattern regexPattern = Pattern.compile(pattern);
+        Matcher matcher = regexPattern.matcher(concatenated.toString());
+
+        while (matcher.find()) {
+            int startPos = matcher.start();
+            int endPos = matcher.end();
+            System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
+        }
+    }
+
 }

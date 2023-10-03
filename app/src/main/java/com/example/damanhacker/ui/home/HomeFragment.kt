@@ -1,6 +1,7 @@
 package com.example.damanhacker.ui.home
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +15,14 @@ import com.example.damanhacker.adapter.AdapterViewMainScreen
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.FragmentHomeBinding
 import com.example.damanhacker.intefaces.onResponse
+import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.model.RequestGetData
-import com.example.damanhacker.utlities.UtlString.Companion.DATE
+import com.example.damanhacker.utlities.*
 import com.example.damanhacker.viewModel.MainViewModel
+import java.util.*
 
 
-class HomeFragment : Fragment(), onResponse {
+class HomeFragment : Fragment(), onResponse, onResultList {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var dbHandler: DBHandler
@@ -35,12 +37,12 @@ class HomeFragment : Fragment(), onResponse {
             inflater, R.layout.fragment_home, container, false
         )
         dbHandler = DBHandler(context)
-        try {
-            binding.progress.visibility = View.VISIBLE
-            MainViewModel(requireContext(), this@HomeFragment).getData()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        binding.TextViewDate.setOnClickListener {
+            openCalender()
         }
+        binding.TextViewDate.text = DateUtilities().getCurrentDate()
+
+        getData()
 
         return binding.root
     }
@@ -63,11 +65,6 @@ class HomeFragment : Fragment(), onResponse {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = AdapterViewMainScreen(value, context)
-            addItemDecoration(itemDecoration)
-        }
-        binding.recyclerViewFs.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = AdapterViewMainScreen(value, context)
             addItemDecoration(itemDecoration)
@@ -98,12 +95,70 @@ class HomeFragment : Fragment(), onResponse {
     override fun onSuccess(list: ArrayList<DataModelMainData>) {
         binding.progress.visibility = View.GONE
         setupRecyclerView(list)
+        val listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
 
+        SearialNumberClasic().patternCheckBasedOnSerialNumber(
+            listData, this@HomeFragment, 1
+        )
+        /*  val listData = ArrayList<String>()
+          list.forEachIndexed { _, element ->
+              listData.add(Mapping().getColorMatcher(element.number))
+          }
+          val pattern = "GGRRRGGGR"
+          PatternCheck().pickDataP(listData, pattern)*/
     }
 
     override fun Error(data: String) {
         binding.progress.visibility = View.GONE
     }
 
+    private fun getData() {
+        try {
+            binding.progress.visibility = View.VISIBLE
+            MainViewModel(
+                requireContext(), this@HomeFragment
+            ).getData(binding.TextViewDate.text.toString())
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun openCalender() {
+        val c = Calendar.getInstance()
+        val year: Int = c.get(Calendar.YEAR)
+        val month: Int = c.get(Calendar.MONTH)
+        val day: Int = c.get(Calendar.DAY_OF_MONTH)
+
+        var MONTH = "";
+        var DAY = "";
+        val datePickerDialog = DatePickerDialog(
+            requireContext(), { _, year, monthOfYear, dayOfMonth ->
+                MONTH = if (monthOfYear < 9) {
+                    "0" + (monthOfYear + 1).toString()
+                } else {
+                    (monthOfYear + 1).toString()
+                }
+                DAY = if (dayOfMonth < 10) {
+                    "0$dayOfMonth"
+                } else {
+                    dayOfMonth.toString()
+                }
+                binding.TextViewDate.text = ("$DAY-$MONTH-$year").also {
+                    println(it)
+                }
+                getData()
+            }, year, month, day
+        )
+        datePickerDialog.show()
+    }
+
+    override fun onItemText(data: ArrayList<String>) {
+
+    }
+
+    override fun onPatternSelection(pattern: Int) {
+
+    }
 
 }

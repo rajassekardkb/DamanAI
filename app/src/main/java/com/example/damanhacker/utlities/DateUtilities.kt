@@ -8,8 +8,8 @@ class DateUtilities {
     fun getCurrentDate(): String {
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c: Calendar = Calendar.getInstance()
-        // return sdf.format(c.time)
-        return DATE
+        return sdf.format(c.time)
+       // return DATE
     }
 
     fun getTime(period: Int): String {

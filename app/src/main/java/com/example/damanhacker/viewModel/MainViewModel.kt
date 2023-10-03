@@ -11,7 +11,6 @@ import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.DataModelMainResponse
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.Mapping
-import com.example.damanhacker.utlities.UtlString
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -22,10 +21,10 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
         return apiCall.getData(requestData)
     }
 
-    fun getData() {
+    fun getData(date: String) {
         viewModelScope.launch {
             val requestData = RequestGetData(
-                CHK = "GET_DAMAN_LIST", DATE = UtlString.DATE
+                CHK = "GET_DAMAN_LIST", DATE = date
             )
             val response = getApi(requestData)
             if (response.isSuccessful) {
@@ -45,6 +44,23 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
     }
 
     private fun prepareData(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
+        val listData = ArrayList<DataModelMainData>()
+        data.forEachIndexed { _, element ->
+            listData.add(
+                DataModelMainData(
+                    sno = element.sno,
+                    period = element.period,
+                    number = element.number,
+                    value = Mapping().getValue(element.number),
+                    color = Mapping().getColor(element.number),
+                    date = element.date,
+                    flag = 0
+                )
+            )
+        }
+        return listData
+    }
+    private fun prepareDataPattern(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
         val listData = ArrayList<DataModelMainData>()
         data.forEachIndexed { _, element ->
             listData.add(

@@ -1,4 +1,4 @@
-package com.example.damanhacker.ui.numeric
+package com.example.damanhacker.ui.clasic
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,28 +14,26 @@ import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterPattern
 import com.example.damanhacker.adapter.AdapterResult
 import com.example.damanhacker.database.DBHandler
-import com.example.damanhacker.databinding.NumericFragmentBinding
+import com.example.damanhacker.databinding.ClasicFragmentBinding
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
-import com.example.damanhacker.ui.slideshow.NumericViewModel
 import com.example.damanhacker.utlities.*
 import kotlinx.coroutines.launch
 import java.util.*
 
-class NumericFragment : Fragment(), onResultList {
+class ClasicFragment : Fragment(), onResultList {
 
-    private lateinit var binding: NumericFragmentBinding
+    private lateinit var binding: ClasicFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
     private var position: Int = 0
     private lateinit var dbHandler: DBHandler
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val slideshowViewModel = ViewModelProvider(this)[NumericViewModel::class.java]
 
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.numeric_fragment, container, false
+            inflater, R.layout.clasic_fragment, container, false
         )
         dbHandler = DBHandler(context)
         binding.TextViewDate.setOnClickListener {
@@ -45,23 +42,16 @@ class NumericFragment : Fragment(), onResultList {
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
         viewLifecycleOwner.lifecycleScope.launch {
             val pattern = arrayListOf(
-                patternData("S6", 0),
-                patternData("9", 1),
-                patternData("6", 2),
-                patternData("VR", 3),
-                patternData("VG", 4),
-                patternData("0:3", 5),
-                patternData("5:3", 6),
-                patternData("0:3", 7),
-                patternData("1:3", 8),
-                patternData("2:3", 9),
-                patternData("3:3", 10),
-                patternData("4:3", 11),
-                patternData("5:3", 12),
-                patternData("6:3", 13),
-                patternData("7:3", 14),
-                patternData("8:3", 15),
-                patternData("9:3", 16),
+                patternData("S0", 0),
+                patternData("S1", 1),
+                patternData("S2", 2),
+                patternData("S3", 3),
+                patternData("S4", 4),
+                patternData("S5", 5),
+                patternData("S6", 6),
+                patternData("S7", 7),
+                patternData("S8", 8),
+                patternData("S9", 9),
             )
 
             patternRecyclerView(pattern)
@@ -110,92 +100,12 @@ class NumericFragment : Fragment(), onResultList {
     }
 
     override fun onPatternSelection(pattern: Int) {
-        when (pattern) {
-            0 -> {
-                SearialNumberClasic().patternCheckBasedOnSerialNumber(listData,this@NumericFragment,6)
-            }
-            1 -> {
-                CheckNumberBasics().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 9
-                )
-            }
-            2 -> {
-                CheckNumberBasics().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 6
+
+        SearialNumberClasic().patternCheckBasedOnSerialNumber(
+                    listData, this@ClasicFragment, pattern
                 )
 
-            }
-            3 -> {
-                CheckViolet().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 0
-                )
-            }
-            4 -> {
-                CheckViolet().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 5
-                )
-            }
-            5 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 0
-                )
-            }
-            6 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 5
-                )
-            }
-            7 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 0
-                )
-            }
-            8 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 1
-                )
-            }
-            9 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 2
-                )
-            }
-            10 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 3
-                )
-            }
-            11 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 4
-                )
-            }
-            12 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 5
-                )
-            }
-            13 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 6
-                )
-            }
-            14 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 7
-                )
-            }
-            15 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 8
-                )
-            }
-            16 -> {
-                CheckVioletThreePattern().patternCheckBasedOnSerialNumber(
-                    listData, this@NumericFragment, 9
-                )
-            }
-        }
+
     }
 
     private fun patternRecyclerView(data: ArrayList<patternData>) {
@@ -204,7 +114,7 @@ class NumericFragment : Fragment(), onResultList {
         binding.recyclerViewPattern.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = AdapterPattern(
-                list = data, context = requireContext(), onResultList_ = this@NumericFragment
+                list = data, context = requireContext(), onResultList_ = this@ClasicFragment
             )
             addItemDecoration(itemDecoration)
         }

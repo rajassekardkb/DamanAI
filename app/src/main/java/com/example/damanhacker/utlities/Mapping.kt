@@ -43,6 +43,20 @@ class Mapping {
         return color
     }
 
+    fun getColorMatcher(number: Int): String {
+        var color = ""
+        when (number) {
+            1, 3, 7, 9, 5 -> {
+                color = "G"
+            }
+
+            2, 4, 6, 8, 0 -> {
+                color = "R"
+            }
+        }
+        return color
+    }
+
     fun getValue(number: Int): String {
         var value = ""
         when (number) {
