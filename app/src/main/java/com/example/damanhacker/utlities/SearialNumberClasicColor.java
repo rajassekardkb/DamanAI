@@ -1,6 +1,5 @@
 package com.example.damanhacker.utlities;
 
-
 import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
 
 import com.example.damanhacker.intefaces.onResultList;
@@ -8,9 +7,12 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class NumberThreePattern {
+
+public class SearialNumberClasicColor {
     int matchingClear = 0;
     int number = 0;
+
+    boolean matchCheck;
 
     int matchPattern = 0;
     int loopMax = 0;
@@ -35,17 +37,16 @@ public class NumberThreePattern {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            //  if (data.getPeriod() % 10 == number) {
-
-            getMatch(serialNumberPositionMoveForward);
-            //  }
+            if (data.getPeriod() % 10 == number && (data.getNumber() % 2 != 0)) {
+                getMatch(serialNumberPositionMoveForward);
+            }
             serialNumberPositionMoveForward++;
         }
         if (onResultList_ != null) {
             onResultList_.onItemText(finalResult);
         }
         for (int k = 0; k < finalResult.size(); k++) {
-            //  System.out.println("\t" + k + "\n\n" + finalResult.get(k) + "\n");
+            System.out.println("Rajasekar->\t" + k + "\n\n" + finalResult.get(k) + "\n");
         }
 
     }
@@ -55,27 +56,29 @@ public class NumberThreePattern {
         int matchPosition = currentPosition;
         if (dataList.size() == matchPosition) return;
         StringBuilder value = new StringBuilder();
-        String matchValue = dataList.get(matchPosition).getValue();
+        String matchValue = dataList.get(matchPosition).getColor();
         String currentValue;
         loopMax = 0;
         matchingClear = 0;
         matchPosition++;
+        matchCheck = false;
         value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\n\n");
 
         for (int i = matchPosition; i < dataList.size(); i++) {
-            currentValue = dataList.get(i).getValue();
+            currentValue = dataList.get(i).getColor();
             // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
+            if (!matchValue.equals(currentValue)) {
 
-            if ((valueMatching(currentValue, matchValue))) {
                 loopMax++;
                 matchingClear++;
                 matchPattern++;
 
-                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("\n");
-                if (matchPattern == 3) {
-                    //System.out.println("If Match Pattern---->" + matchPattern+":"+matchValue);
-                    matchValue = convertOpositeValue(matchValue);
+                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append(" : ").append(dataList.get(i).getValue()).append("\n");
 
+                if (!matchCheck) {
+                    //  System.out.println("If Match Pattern---->" + matchValue);
+                    matchValue = convertOpositeValue(matchValue);
+                    matchCheck = true;
                 }
 
                 // System.out.println("If---->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
@@ -107,16 +110,19 @@ public class NumberThreePattern {
         System.out.println(str);
     }
 
-    public String convertOpositeValue(String str) {
+    public String convertOpositeValue(String str_) {
+        String str = String.valueOf(str_.charAt(0));
+
         String returnValue;
-        if (str.equals("Small")) {
-            returnValue = "Big";
+        if (str.equals("R")) {
+            returnValue = "G";
         } else {
-            returnValue = "Small";
+            returnValue = "R";
         }
         matchPattern = 0;
         return returnValue;
     }
+
 
     public boolean valueMatching(String currentValue, String matchValue) {
         // System.out.println(currentValue + ":" + matchValue);

@@ -2,42 +2,50 @@ package com.example.damanhacker.utlities;
 
 
 import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
+import static java.sql.DriverManager.println;
 
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class CheckViolet {
+public class CheckNumberBasicsGR {
     int matchingClear = 0;
-
     int loopMax = 0;
-    int number = 0;
     int serialNumberPositionMoveForward = 0;
+    int number = 0;
     ArrayList<DataModelMainData> dataList;
     ArrayList<String> finalResult = new ArrayList<>();
     onResultList onResultList_;
 
-    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _) {
-        this.dataList = _;
-        picSerialNumberBasics();
-    }
-
     public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult, int number_) {
         this.dataList = _;
         onResultList_ = onResult;
+        println("patternCheckBasedOnSerialNumber-->" + dataList.size());
         this.number = number_;
+        picSerialNumberBasics();
+    }
+
+    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _) {
+
+        this.dataList = _;
         picSerialNumberBasics();
     }
 
 
     public void picSerialNumberBasics() {
+        int lpc = 0;
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
+
             if (data.getNumber() == number) {
+                //System.out.println("valueMatching-->" + dataList.get(serialNumberPositionMoveForward).getNumber());
+                lpc++;
+
                 getMatch(serialNumberPositionMoveForward);
             }
             serialNumberPositionMoveForward++;
+
         }
         if (onResultList_ != null) {
             onResultList_.onItemText(finalResult);
@@ -51,36 +59,22 @@ public class CheckViolet {
     public void getMatch(int currentPosition) {
         matchingClear = 0;
         StringBuilder value = new StringBuilder();
-        if (currentPosition == 0) {
-            serialNumberPositionMoveForward = currentPosition;
-            serialNumberPositionMoveForward++;
-            matchingClear = 0;
-            loopMax = 0;
-            return;
-        }
-        int initial = currentPosition - 1;
-        String matchValue = dataList.get(initial).getColor();
-        if (matchValue.equals("RV") || matchValue.equals("GV")) {
-            serialNumberPositionMoveForward = currentPosition;
-            serialNumberPositionMoveForward++;
-            matchingClear = 0;
-            return;
-        }
-        value.append("\t").append(new DateUtilities().getTime(dataList.get(initial).getPeriod())).append("\n\n");
-        value.append(dataList.get(initial).getPeriod()).append(" : ").append(dataList.get(initial).getNumber()).append(" : ").append(dataList.get(initial).getColor()).append(" : ").append(dataList.get(initial).getValue()).append("\n");
-        initial++;
-        value.append(dataList.get(initial).getPeriod()).append(" : ").append(dataList.get(initial).getNumber()).append(" : ").append(dataList.get(initial).getColor()).append(" : ").append(dataList.get(initial).getValue()).append("\n");
+        value.append("\t").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\n\n");
+        value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(dataList.get(currentPosition).getColor()).append(" : ").append(dataList.get(currentPosition).getValue()).append("\n");
+        String matchValue = dataList.get(currentPosition).getColor();
         currentPosition++;
-        String currentColor;
-
+        String currentValue;
         loopMax = 0;
-
         for (int i = currentPosition; i < dataList.size(); i++) {
-            currentColor = dataList.get(i).getColor();
-            if ((valueMatching(currentColor, matchValue))) {
+            currentValue = dataList.get(i).getColor();
+
+            if ((valueMatching(currentValue, matchValue, i))) {
+
+                //System.out.println(matchValue + ":" + currentValue+":"+i);
+
                 loopMax++;
                 matchingClear++;
-                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentColor).append(" : ").append(dataList.get(i).getValue()).append("\n");
+                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append(" : ").append(dataList.get(i).getValue()).append("\n");
             } else {
                 addValue(value.toString());
                 value.setLength(0);
@@ -106,11 +100,10 @@ public class CheckViolet {
         System.out.println(str);
     }
 
-    public boolean valueMatching(String currentValue, String matchValue) {
+    public boolean valueMatching(String currentValue, String matchValue, int pos) {
         boolean check = false;
-        //if (!currentValue.equals(matchValue)) {
-        if (!currentValue.contains(matchValue)) {
-            //System.out.println(currentValue + ":" + matchValue);
+        currentValue = String.valueOf(currentValue.charAt(0));
+        if (!matchValue.equals(currentValue)) {
             check = true;
         }
         return check;

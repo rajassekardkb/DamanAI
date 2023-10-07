@@ -10,6 +10,7 @@ import com.example.damanhacker.model.DataModelMainData;
 import com.example.damanhacker.utlities.Mapping;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -110,6 +111,21 @@ public class DBHandler extends SQLiteOpenHelper {
         return count;
     }
 
+    public ArrayList<String> getDateList() {
+         ArrayList<String> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT DISTINCT " + DM_DATE + " FROM " + TABLE_NAME_DAMAN_SERVER, null);
+        if (c.moveToFirst()) {
+            do {
+                list.add(c.getString(0));
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return list;
+    }
+
+
     public int getCheck(String date, String period) {
         int count = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -147,6 +163,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return listValue;
     }
+
     public ArrayList<DataModelMainData> getDataProcess(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<DataModelMainData> listValue = new ArrayList<>();

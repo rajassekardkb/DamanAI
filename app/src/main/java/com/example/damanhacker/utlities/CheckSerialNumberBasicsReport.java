@@ -11,12 +11,14 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class CheckSerialNumberBasics {
+public class CheckSerialNumberBasicsReport {
     int matchingClear = 0;
     onResultList onResultList_;
+    StringBuilder value = new StringBuilder();
 
     int serialNext = 0;
     int loopMax = 0;
+    int loopMaxInc = 0;
     int serialCheck = 0;
     int PatternSerialNumber = 0;
     boolean onlyFirstTime = false;
@@ -32,32 +34,27 @@ public class CheckSerialNumberBasics {
     StringBuilder colorBuilder = new StringBuilder();
     StringBuilder periodBuilder = new StringBuilder();
     StringBuilder numberBuild = new StringBuilder();
-    String matchValue = "";
+    String DATE = "";
     String currentColor = "";
 
-    public void patternCheckBasedOnSerialNumber(ArrayList<DataModelMainData> _, onResultList onResult, int pattern) {
-        this.dataList = _;
+    public void patternCheckBasedOnSerialNumberReport(ArrayList<String> listDate, onResultList onResult, int pattern, Context con) {
         onResultList_ = onResult;
-
-        // for (int i = 0; i < 10; i++) {
-        //currentSerialNumber = PatternSerialNumber;
+        DBHandler dBHandler = new DBHandler(con);
         currentSerialNumber = pattern;
-        prepareSerialNumber(currentSerialNumber);
-        picSerialNumberBasics();
-        finalResult.add("---------------------");
-        //   }
 
+        for (int i = 0; i < listDate.size(); i++) {
+            DATE = listDate.get(i);
+            this.dataList = dBHandler.getDataProcess(DATE);
+            prepareSerialNumber(currentSerialNumber);
+            value.append("\n").append("DATE->").append(DATE).append("-").append("SERIAL->").append(currentSerialNumber).append("-ListSize").append(dataList.size());
+            picSerialNumberBasics();
+            addValue(value.toString());
+            loopMaxInc = 0;
+            // finalResult.add("---------------------");
+        }
         if (onResultList_ != null) {
             onResultList_.onItemText(finalResult);
         }
-
-
-       /* for (int i = 0; i < dataList.size(); i++) {
-            DataModelMainData data = dataList.get(i);
-
-            getTime(data.getPeriod());
-        }*/
-
     }
 
 
@@ -65,7 +62,6 @@ public class CheckSerialNumberBasics {
         serialNumberPositionMoveForward = 0;
         while (serialNumberPositionMoveForward < serialNumberList.size()) {
             serialNumberPosition = serialNumberList.get(serialNumberPositionMoveForward);
-
             getMatch(serialNumberPosition, (serialNumberPosition + 1));
             serialNumberPositionMoveForward++;
         }
@@ -76,33 +72,29 @@ public class CheckSerialNumberBasics {
 
 
     public void getMatch(int startPosition, int matchPosition) {
-        print("PositionCheck-->" + startPosition + ":" + matchPosition + ":" + dataList.size());
+        // print("PositionCheck-->" + startPosition + ":" + matchPosition + ":" + dataList.size());
         if (dataList.size() == matchPosition) {
             return;
         }
         String matchValue = dataList.get(matchPosition).getValue();
 
-        StringBuilder value = new StringBuilder();
 
-        value.append("\n").append("Serial->").append(currentSerialNumber);
-        value.append("\n").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
         loopMax = 0;
 
         for (int i = startPosition; i < dataList.size(); i++) {
             String currentValue = dataList.get(i).getValue();
             if (matchValue.equals(currentValue)) {
                 loopMax++;
-                value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("");
+                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("");
                 matchingClear++;
                 if (i == dataList.size() - 1) {
-                    addValue(value.toString());
+                    addInc(dataList.get(i).getPeriod());
                 }
             } else {
-                addValue(value.toString());
-                value.setLength(0);
+                addInc(dataList.get(i).getPeriod());
                 matchValue = currentValue;
 
-                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("");
+                //value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("");
                 int lp = loopMax + serialCheck;
 
                 if (lp >= dataList.get(i).getPeriod()) {
@@ -115,12 +107,16 @@ public class CheckSerialNumberBasics {
     }
 
 
-    public void addValue(String value) {
+    public void addValue(String value_) {
+        finalResult.add(value_ + "\n " + "->" + "cnt" + loopMaxInc);
+        value.setLength(0);
+    }
+
+    public void addInc(int value_) {
 
         if (matchingClear >= MAXPATTERN) {
-
-            finalResult.add(value + "\n " + "->" + matchingClear);
-
+            loopMaxInc++;
+            value.append("\n").append(new DateUtilities().getTime(value_)).append(":Count->").append(matchingClear);
         }
 
         matchingClear = 0;
@@ -164,7 +160,7 @@ public class CheckSerialNumberBasics {
 
         serialNumberList = serialNumberListTemp;
         for (int i = 0; i < serialNumberList.size(); i++) {
-            //System.out.println("serialNumberList--:" + serialNumberList.get(i));
+            System.out.println("serialNumberList--:" + serialNumberList.get(i));
         }
 
 

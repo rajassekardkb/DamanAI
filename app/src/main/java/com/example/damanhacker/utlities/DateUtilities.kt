@@ -9,7 +9,6 @@ class DateUtilities {
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c: Calendar = Calendar.getInstance()
         return sdf.format(c.time)
-       // return DATE
     }
 
     fun getTime(period: Int): String {

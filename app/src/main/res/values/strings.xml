@@ -13,6 +13,7 @@
     <string name="MultiCheck">MultiCheck</string>
     <string name="FindDuplicateNumber">FindDuplicateNumber</string>
     <string name="ClasicFragmet">ClasicFragment</string>
+    <string name="odd">Odd</string>
     <string name="numeric">FindNumeric</string>
     <string name="slideshowFragment">SlideshowFragment</string>
 </resources>

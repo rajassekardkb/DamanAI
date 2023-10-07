@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.damanhacker.databinding.ResultListItemBinding
 
-
 class AdapterResult(
     private val list: ArrayList<String>,
     private val context: Context
+    // private val listener: ItemOnClickListenerView
 ) : RecyclerView.Adapter<AdapterResult.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -48,7 +48,6 @@ class HomeFragment : Fragment(), onResponse, onResultList {
     }
 
     override fun onResume() {
-
         super.onResume()
     }
 
@@ -72,40 +71,9 @@ class HomeFragment : Fragment(), onResponse, onResultList {
 
     }
 
-    private fun prepare(date: String) {
-        prepareList = ArrayList()
-
-        val count = dbHandler.getCount(date)
-
-        if (count == 0) {
-            for (i in 1..1440) {
-
-                val data = DataModelMainData(
-                    sno = 0, period = i, number = 0, value = "", color = "", date = date, flag = 0
-                )
-
-                prepareList.add(data)
-            }
-            dbHandler.addNewCourse(prepareList)
-        }
-
-
-    }
-
     override fun onSuccess(list: ArrayList<DataModelMainData>) {
         binding.progress.visibility = View.GONE
         setupRecyclerView(list)
-        val listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-
-        SearialNumberClasic().patternCheckBasedOnSerialNumber(
-            listData, this@HomeFragment, 1
-        )
-        /*  val listData = ArrayList<String>()
-          list.forEachIndexed { _, element ->
-              listData.add(Mapping().getColorMatcher(element.number))
-          }
-          val pattern = "GGRRRGGGR"
-          PatternCheck().pickDataP(listData, pattern)*/
     }
 
     override fun Error(data: String) {

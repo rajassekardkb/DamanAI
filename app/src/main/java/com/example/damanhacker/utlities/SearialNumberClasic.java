@@ -1,5 +1,7 @@
 package com.example.damanhacker.utlities;
 
+import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
+
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -98,7 +100,7 @@ public class SearialNumberClasic {
 
 
     public void addValue(String value) {
-        if (matchingClear >= 5) {
+        if (matchingClear >= MAXPATTERN) {
             finalResult.add(value + "--Level ------->" + loopMax);
         }
         matchingClear = 0;

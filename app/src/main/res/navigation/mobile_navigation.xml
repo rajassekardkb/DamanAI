@@ -37,4 +37,14 @@
         android:name="com.example.damanhacker.ui.clasic.ClasicFragment"
         android:label="@string/ClasicFragmet"
         tools:layout="@layout/clasic_fragment" />
+    <fragment
+        android:id="@+id/nav_odd"
+        android:name="com.example.damanhacker.ui.numeric.OddFragment"
+        android:label="@string/odd"
+        tools:layout="@layout/odd_fragment" />
+    <fragment
+        android:id="@+id/nav_report"
+        android:name="com.example.damanhacker.ui.numeric.ReportFragment"
+        android:label="ReportFragment"
+        tools:layout="@layout/report_fragment" />
 </navigation>

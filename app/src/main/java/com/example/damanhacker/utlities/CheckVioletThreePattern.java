@@ -1,8 +1,6 @@
 package com.example.damanhacker.utlities;
 
 
-import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
-
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -65,6 +63,7 @@ public class CheckVioletThreePattern {
         for (int i = matchPosition; i < dataList.size(); i++) {
             currentValue = dataList.get(i).getValue();
             // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
+            System.out.println("If Match Pattern---->" + matchPattern + ":" + currentValue + ":" + matchValue + ":" + dataList.get(i).getPeriod());
 
             if ((valueMatching(currentValue, matchValue))) {
                 loopMax++;
@@ -96,7 +95,7 @@ public class CheckVioletThreePattern {
 
 
     public void addValue(String value) {
-        if (matchingClear >= MAXPATTERN) {
+        if (matchingClear >= 5) {
             finalResult.add(value + "--Level ------->" + loopMax);
         }
         matchingClear = 0;

@@ -10,10 +10,9 @@
         android:id="@+id/textResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_17ssp"
-        android:layout_marginTop="@dimen/_5ssp"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/_15ssp"
+        android:layout_marginStart="@dimen/_7ssp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -1,4 +1,4 @@
-package com.example.damanhacker.ui.clasic
+package com.example.damanhacker.ui.numeric
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -13,30 +13,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterPattern
 import com.example.damanhacker.adapter.AdapterResult
+import com.example.damanhacker.adapter.AdapterViewMainScreenSmall
 import com.example.damanhacker.database.DBHandler
-import com.example.damanhacker.databinding.ClasicFragmentBinding
+import com.example.damanhacker.databinding.OddFragmentBinding
+import com.example.damanhacker.intefaces.ItemOnClickListenerView
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
+import com.example.damanhacker.utlities.CheckSerialNumberBasics
 import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.Mapping
-import com.example.damanhacker.utlities.SearialNumberClasic
-import com.example.damanhacker.utlities.SearialNumberClasicColor
+import com.example.damanhacker.utlities.SortingDate
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ClasicFragment : Fragment(), onResultList {
+class OddFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
-    private lateinit var binding: ClasicFragmentBinding
+    private lateinit var binding: OddFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
-    private var position: Int = 0
     private lateinit var dbHandler: DBHandler
+    var selectedNumber = 6
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.clasic_fragment, container, false
+            inflater, R.layout.odd_fragment, container, false
         )
         dbHandler = DBHandler(context)
         binding.TextViewDate.setOnClickListener {
@@ -45,21 +45,27 @@ class ClasicFragment : Fragment(), onResultList {
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
         viewLifecycleOwner.lifecycleScope.launch {
             val pattern = arrayListOf(
-                patternData("S0", 0),
-                patternData("S1", 1),
-                patternData("S2", 2),
-                patternData("S3", 3),
-                patternData("S4", 4),
-                patternData("S5", 5),
-                patternData("S6", 6),
-                patternData("S7", 7),
-                patternData("S8", 8),
-                patternData("S9", 9),
+                patternData("0", 0),
+                patternData("1", 1),
+                patternData("2", 2),
+                patternData("3", 3),
+                patternData("4", 4),
+                patternData("5", 5),
+                patternData("6", 6),
+                patternData("7", 7),
+                patternData("8", 8),
+                patternData("9", 9)
             )
-            patternRecyclerView(pattern)
-            listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-        }
 
+            patternRecyclerView(pattern)
+
+            listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+
+            // values = result.body()?.values!!
+            //setupRecyclerView(dbHandler.getData(date))
+
+        }
+        //report()
 
         return binding.root
     }
@@ -79,9 +85,12 @@ class ClasicFragment : Fragment(), onResultList {
     }
 
     override fun onPatternSelection(pattern: Int) {
-        SearialNumberClasic().patternCheckBasedOnSerialNumber(
-            listData, this@ClasicFragment, pattern
+        CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(
+            listData, this@OddFragment, pattern
         )
+        selectedNumber = pattern
+        setupRecyclerView(selectedNumber)
+        setSelection(0)
     }
 
     private fun patternRecyclerView(data: ArrayList<patternData>) {
@@ -90,7 +99,7 @@ class ClasicFragment : Fragment(), onResultList {
         binding.recyclerViewPattern.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = AdapterPattern(
-                list = data, context = requireContext(), onResultList_ = this@ClasicFragment
+                list = data, context = requireContext(), onResultList_ = this@OddFragment
             )
             addItemDecoration(itemDecoration)
         }
@@ -102,8 +111,8 @@ class ClasicFragment : Fragment(), onResultList {
         val month: Int = c.get(Calendar.MONTH)
         val day: Int = c.get(Calendar.DAY_OF_MONTH)
 
-        var MONTH = "";
-        var DAY = "";
+        var MONTH: String
+        var DAY: String;
         val datePickerDialog = DatePickerDialog(
             requireContext(), { _, year, monthOfYear, dayOfMonth ->
                 MONTH = if (monthOfYear < 9) {
@@ -119,10 +128,50 @@ class ClasicFragment : Fragment(), onResultList {
                 binding.TextViewDate.text = ("$DAY-$MONTH-$year").also {
                     println(it)
                 }
+                selectedNumber = 6
                 listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
+                CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(
+                    listData, this@OddFragment, selectedNumber
+                )
+                setupRecyclerView(selectedNumber)
             }, year, month, day
         )
         datePickerDialog.show()
+    }
+
+    override fun onItemView(id: Int) {
+
+
+    }
+
+    override fun onResume() {
+        CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(
+            listData, this@OddFragment, selectedNumber
+        )
+
+        setupRecyclerView(selectedNumber)
+        super.onResume()
+
+    }
+
+    private fun setSelection(position: Int) {
+        binding.recyclerViewView.postDelayed(Runnable {
+            binding.recyclerViewView.smoothScrollToPosition(position)
+        }, 1_000)
+    }
+
+
+
+    private fun setupRecyclerView(number: Int) {
+        val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
+        binding.recyclerViewView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = AdapterViewMainScreenSmall(
+                dbHandler.getData(binding.TextViewDate.text.toString()), context, number
+            )
+            addItemDecoration(itemDecoration)
+        }
     }
 
 }
