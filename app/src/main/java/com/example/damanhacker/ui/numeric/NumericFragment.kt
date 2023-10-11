@@ -81,24 +81,6 @@ class NumericFragment : Fragment(), onResultList {
         super.onDestroyView()
     }
 
-    private fun preparedata(data: ArrayList<DataModelMainData>): ArrayList<DataModelMainData> {
-        listData = ArrayList()
-        data.forEachIndexed { _, element ->
-            listData.add(
-                DataModelMainData(
-                    sno = element.sno,
-                    period = element.period,
-                    number = element.number,
-                    value = Mapping().getValue(element.number),
-                    color = Mapping().getColor(element.number),
-                    date = element.date,
-                    flag = 0
-                )
-            )
-        }
-        return listData
-    }
-
     override fun onItemText(data: ArrayList<String>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
@@ -112,7 +94,9 @@ class NumericFragment : Fragment(), onResultList {
     override fun onPatternSelection(pattern: Int) {
         when (pattern) {
             0 -> {
-                SearialNumberClasic().patternCheckBasedOnSerialNumber(listData,this@NumericFragment,6)
+                SearialNumberClasic().patternCheckBasedOnSerialNumber(
+                    listData, this@NumericFragment, 6
+                )
             }
             1 -> {
                 CheckNumberBasics().patternCheckBasedOnSerialNumber(
@@ -234,8 +218,7 @@ class NumericFragment : Fragment(), onResultList {
                     println(it)
                 }
                 listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
-            },
-            year, month, day
+            }, year, month, day
         )
         datePickerDialog.show()
     }

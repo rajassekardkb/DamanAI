@@ -15,13 +15,12 @@ public class PatternCheck {
         DataModelMainData valueCurrent = dataList.get(0);
     }
 
-    public void pickData(ArrayList<String> list, String pattern) {
+    public void pickDataP_(ArrayList<String> list, String pattern) {
 
         StringBuilder concatenated = new StringBuilder();
         for (String str : list) {
             concatenated.append(str);
         }
-
         // Check if the concatenated string matches the pattern
         if (concatenated.toString().contains(pattern)) {
             System.out.println("Pattern found in the ArrayList." + pattern);
@@ -31,6 +30,7 @@ public class PatternCheck {
     }
 
     public void pickDataP(ArrayList<String> list, String pattern) {
+        System.out.println("Match found at p Here..."+list.size());
         StringBuilder concatenated = new StringBuilder();
         for (String str : list) {
             concatenated.append(str);
