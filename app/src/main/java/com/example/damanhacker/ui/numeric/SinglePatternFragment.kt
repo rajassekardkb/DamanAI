@@ -21,6 +21,7 @@ import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.utlities.DateUtilities
+import com.example.damanhacker.utlities.PatternCheck
 import com.example.damanhacker.utlities.SerialNumberSinglePattern
 import kotlinx.coroutines.launch
 import java.util.*
@@ -106,7 +107,6 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
         val year: Int = c.get(Calendar.YEAR)
         val month: Int = c.get(Calendar.MONTH)
         val day: Int = c.get(Calendar.DAY_OF_MONTH)
-
         var MONTH: String
         var DAY: String;
         val datePickerDialog = DatePickerDialog(
@@ -135,12 +135,11 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
     }
 
     override fun onResume() {
-
         super.onResume()
     }
 
     private fun setSelection(position: Int) {
-        binding.recyclerViewView.postDelayed(Runnable {
+        binding.recyclerViewView.postDelayed({
             binding.recyclerViewView.smoothScrollToPosition(position)
         }, 1_000)
     }
@@ -156,6 +155,4 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
             addItemDecoration(itemDecoration)
         }
     }
-
 }
-

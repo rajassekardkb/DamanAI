@@ -11,6 +11,7 @@ import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.DataModelMainResponse
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.Mapping
+import com.example.damanhacker.utlities.PatternCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -40,6 +41,7 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
                             dbHandler.InsertDataMaster(data)
                         }
                     }
+                    PatternCheck().pickDataDuplicateNumber(dbHandler)
                 }
 
             } else {

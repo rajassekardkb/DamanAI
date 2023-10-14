@@ -16,4 +16,6 @@
     <string name="odd">Odd</string>
     <string name="numeric">FindNumeric</string>
     <string name="slideshowFragment">SlideshowFragment</string>
+    <string name="single_pattern">Single Pattern</string>
+    <string name="report">Report</string>
 </resources>

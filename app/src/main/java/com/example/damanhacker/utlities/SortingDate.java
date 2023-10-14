@@ -8,11 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 public class SortingDate {
-
     public  ArrayList<String> sort(ArrayList<String> datees) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
-        // Parse the date strings and store them as Date objects in a list
         List<Date> dates = new ArrayList<>();
         ArrayList<String> datesVal = new ArrayList<>();
         for (String dateString : datees) {
@@ -23,17 +20,11 @@ public class SortingDate {
                 e.printStackTrace();
             }
         }
-
-        // Sort the dates in ascending order
         Collections.sort(dates);
-
-        // Format and print the sorted dates
         for (Date date : dates) {
             String formattedDate = dateFormat.format(date);
-           // System.out.println(formattedDate);
             datesVal.add(formattedDate);
         }
         return datesVal;
     }
-
 }

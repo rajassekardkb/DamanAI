@@ -11,34 +11,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterResult
 import com.example.damanhacker.database.DBHandler
-import com.example.damanhacker.databinding.ReportFragmentBinding
-import com.example.damanhacker.intefaces.ItemOnClickListenerView
+import com.example.damanhacker.databinding.PatternFragmentBinding
 import com.example.damanhacker.intefaces.onResultList
-import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.utlities.CheckSerialNumberBasics
-import com.example.damanhacker.utlities.CheckSerialNumberBasicsReport
-import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.SortingDate
+import com.example.damanhacker.utlities.PatternCheck
 
-class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
+class PatternBasedFragment : Fragment(), onResultList {
 
-    private lateinit var binding: ReportFragmentBinding
-    private var listData = ArrayList<DataModelMainData>()
+    private lateinit var binding: PatternFragmentBinding
     private lateinit var dbHandler: DBHandler
-    var selectedNumber = 6
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.report_fragment, container, false
+            inflater, R.layout.pattern_fragment, container, false
         )
         dbHandler = DBHandler(context)
-        binding.TextViewDate.setOnClickListener {
+        binding.btnView.setOnClickListener {
+            patternCheck(binding.editPattern.text.toString())
         }
-        binding.TextViewDate.text = DateUtilities().getCurrentDate()
-
-        report()
-
         return binding.root
     }
 
@@ -57,14 +47,6 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
     }
 
     override fun onPatternSelection(pattern: Int) {
-        CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(
-            listData, this@ReportFragment, pattern
-        )
-        selectedNumber = pattern
-    }
-
-    override fun onItemView(id: Int) {
-
 
     }
 
@@ -72,17 +54,8 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
         super.onResume()
     }
 
-    private fun report() {
-        val list = SortingDate().sort(dbHandler.dateList)
-
-        CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
-            list, this@ReportFragment, 9, requireContext()
-        )
-
-
-
-
+    private fun patternCheck(pattern: String) {
+        // PatternCheck().pickDataP(dbHandler, pattern, this@PatternBasedFragment)
+        PatternCheck().pickDataDuplicateNumber(dbHandler)
     }
-
 }
-

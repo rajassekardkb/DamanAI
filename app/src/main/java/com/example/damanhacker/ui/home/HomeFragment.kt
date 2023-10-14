@@ -67,7 +67,6 @@ class HomeFragment : Fragment(), onResponse, onResultList {
             adapter = AdapterViewMainScreen(value, context)
             addItemDecoration(itemDecoration)
         }
-
     }
 
     override fun onSuccess(list: ArrayList<DataModelMainData>) {
@@ -76,23 +75,6 @@ class HomeFragment : Fragment(), onResponse, onResultList {
 
     }
 
-    fun patternCheck() {
-        val arrayList = ArrayList<String>()
-        val listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
-
-        for (k in listData.indices) {
-            if (listData[k].value == "Small") {
-                arrayList.add("S")
-            } else {
-                arrayList.add("B")
-            }
-        }
-
-        val pattern_ = "SSBSSBSSB"
-        val pattern = "BBSBBSBBS"
-        PatternCheck().pickDataP(arrayList, pattern)
-
-    }
 
     override fun Error(data: String) {
         binding.progress.visibility = View.GONE
@@ -104,7 +86,6 @@ class HomeFragment : Fragment(), onResponse, onResultList {
             MainViewModel(
                 requireContext(), this@HomeFragment
             ).getData(binding.TextViewDate.text.toString())
-            patternCheck()
         } catch (e: Exception) {
             e.printStackTrace()
         }
