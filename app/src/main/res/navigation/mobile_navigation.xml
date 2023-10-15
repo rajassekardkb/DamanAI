@@ -57,4 +57,9 @@
         android:name="com.example.damanhacker.ui.numeric.PatternBasedFragment"
         android:label="PatternBased"
         tools:layout="@layout/pattern_fragment" />
+    <fragment
+        android:id="@+id/nav_downloading"
+        android:name="com.example.damanhacker.ui.slideshow.DataDownLoading"
+        android:label="Data Downloading"
+        tools:layout="@layout/fragment_data_downloding" />
 </navigation>

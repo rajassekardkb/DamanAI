@@ -13,6 +13,8 @@ import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.Mapping
 import com.example.damanhacker.utlities.PatternCheck
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -36,18 +38,20 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
                     status = true
                     list = it
                     onResponse.onSuccess(list)
-                    prepareData(list).forEach { data ->
-                        if (dbHandler.getCheck(data.date, data.period.toString()) == 0) {
-                            dbHandler.InsertDataMaster(data)
-                        }
-                    }
-                    PatternCheck().pickDataDuplicateNumber(dbHandler)
+                    insertData(list)
                 }
 
             } else {
                 status = false
                 onResponse.Error("Failed")
             }
+        }
+    }
+
+    private fun insertData(list: ArrayList<DataModelMainData>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbHandler.insertDataIfNotExists(prepareData(list))
+            PatternCheck().pickDataDuplicateNumberMax(dbHandler)
         }
     }
 
@@ -85,6 +89,32 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
             )
         }
         return listData
+    }
+
+    fun getDataDownloading(dbHandler: DBHandler, requestList: ArrayList<RequestGetData>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val allData = ArrayList<DataModelMainData>()
+            val deferredResponses = requestList.map { element ->
+                async {
+                    val response = getApi(element)
+                    if (response.isSuccessful) {
+                        response.body()?.values?.let {
+                            allData.addAll(it)
+                            println("DataDownloading-> Request onSuccess->" + element)
+
+                        }
+                    } else {
+                        println("DataDownloading-> Request Error->" + element)
+                        onResponse.Error("Failed")
+                    }
+                }
+            }
+
+            // Wait for all async calls to complete
+            deferredResponses.awaitAll()
+            // Insert data into the database if not already exists
+            dbHandler.insertDataIfNotExists(prepareData(allData))
+        }
     }
 
 }

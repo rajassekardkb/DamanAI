@@ -1,10 +1,15 @@
 package com.example.damanhacker.utlities;
 
+import android.os.Build;
+
 import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +48,40 @@ public class PatternCheck {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         System.out.println("Date----->" + (dateList.get(dateList.size() - 2)));
         ArrayList<DataModelMainData> listData = dbHandler.getDataProcess((dateList.get(dateList.size() - 2)));
-        getDuplicateNumber(listData);
+        //getDuplicateNumber(listData);
+        getMaximumNumber(listData);
 
     }
 
+    public void pickDataDuplicateNumberMax(DBHandler dbHandler) {
+        ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
+        //getDuplicateNumber(listData);
+        //  new findMaxCount().main(listData);
+
+        for (int i = 0; i < dateList.size(); i++) {
+            System.out.println("Date----->" + (dateList.get(i)));
+
+            ArrayList<DataModelMainData> listData = dbHandler.getDataProcess((dateList.get(i)));
+            //new findMaxCount().main(listData, dateList.get(i));              getDuplicateNumber(listData);
+            //new findMaxCount().main(listData, dateList.get(i));
+            getDuplicateNumber(listData);
+        }
+
+    }
+
+    public ArrayList<String> getLast15Days() {
+        ArrayList<String> dateList = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date()); // Set the initial date
+
+        for (int i = 0; i < 10; i++) {
+            dateList.add(dateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_YEAR, -1); // Subtract one day from the current date
+        }
+        return dateList;
+    }
 
     void getDuplicateNumber(ArrayList<DataModelMainData> list) {
 
@@ -64,14 +99,14 @@ public class PatternCheck {
         for (Map.Entry<Integer, List<Integer>> entry : numberToPositions.entrySet()) {
             int number = entry.getKey();
             List<Integer> positions = entry.getValue();
-            if (positions.size() > 1 && number == 7) {
+            if (positions.size() > 1) {
                 //System.out.println("Number " + number + " is duplicated at positions: " + positions);
                 // System.out.println("Total Size->" + positions.size());
 
                 for (int i = 0; i < positions.size() - 1; i++) {
                     int gap = positions.get(i + 1) - positions.get(i);
-                    if(gap>19){
-                        System.out.println("Gap between " + new DateUtilities().getTime(positions.get(i)) + " and " + new DateUtilities().getTime(positions.get(i + 1)) + " is " + gap);
+                    if (gap >= 50) {
+                        System.out.println("Number -->" + number + ":Gap between " + new DateUtilities().getTime(positions.get(i)) + ":" + positions.get(i) + " and " + new DateUtilities().getTime(positions.get(i + 1)) + ":" + positions.get(i + 1) + " is " + gap);
                     }
                     //  System.out.println(i + "");
                     if ((i == positions.size() - 2)) {
@@ -105,4 +140,30 @@ public class PatternCheck {
             value.append(startPos).append("-").append((endPos - 1)).append("\n");
         }
     }
+
+
+    public void getMaximumNumber(ArrayList<DataModelMainData> numbers) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        int maxCount = 0;
+        int maxRepeatedNumber = 0;
+
+        for (DataModelMainData number : numbers) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                countMap.put(number.getNumber(), countMap.getOrDefault(number, 0) + 1);
+            }
+            int count = countMap.get(number);
+            if (count > maxCount) {
+                maxCount = count;
+                maxRepeatedNumber = number.getNumber();
+            }
+        }
+
+        if (maxCount > 1) {
+            System.out.println("getMaximumNumber->The most repeated duplicate number is " + maxRepeatedNumber + " with a count of " + maxCount);
+        } else {
+            System.out.println("getMaximumNumber->No duplicates found or all numbers occur only once.");
+        }
+
+    }
+
 }

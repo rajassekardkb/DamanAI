@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_clasic,
                 R.id.nav_odd,
                 R.id.nav_report,
-                R.id.nav_single
+                R.id.nav_single,
+                R.id.nav_downloading
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
