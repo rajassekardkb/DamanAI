@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitHelper {
 
     const val baseUrl = "http://rajasekar.srisankaraastro.in/"
-    private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)

@@ -37,7 +37,7 @@ public class PatternCheck {
                 }
             }
             //getMatch(list, pattern);
-            getDuplicateNumber(listData);
+            //getDuplicateNumber(listData);
             Valuelist.add(value.toString());
             value.setLength(0);
         }
@@ -57,16 +57,19 @@ public class PatternCheck {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         //getDuplicateNumber(listData);
         //  new findMaxCount().main(listData);
+        ArrayList<DataModelMainData> listData = dbHandler.getDataProcess("14-10-2023");
+        getDuplicateNumber(listData);
 
+        // new findLeastNumber().main(listData);
+
+ /*
         for (int i = 0; i < dateList.size(); i++) {
             System.out.println("Date----->" + (dateList.get(i)));
-
             ArrayList<DataModelMainData> listData = dbHandler.getDataProcess((dateList.get(i)));
             //new findMaxCount().main(listData, dateList.get(i));              getDuplicateNumber(listData);
-            //new findMaxCount().main(listData, dateList.get(i));
-            getDuplicateNumber(listData);
-        }
-
+            new findLeastNumber().main(listData);
+            //getDuplicateNumber(listData);
+        }*/
     }
 
     public ArrayList<String> getLast15Days() {
@@ -99,15 +102,16 @@ public class PatternCheck {
         for (Map.Entry<Integer, List<Integer>> entry : numberToPositions.entrySet()) {
             int number = entry.getKey();
             List<Integer> positions = entry.getValue();
-            if (positions.size() > 1) {
+            if (positions.size() > 1 && number == 9) {
                 //System.out.println("Number " + number + " is duplicated at positions: " + positions);
-                // System.out.println("Total Size->" + positions.size());
+                //System.out.println("Number->" + number);
 
                 for (int i = 0; i < positions.size() - 1; i++) {
                     int gap = positions.get(i + 1) - positions.get(i);
-                    if (gap >= 50) {
-                        System.out.println("Number -->" + number + ":Gap between " + new DateUtilities().getTime(positions.get(i)) + ":" + positions.get(i) + " and " + new DateUtilities().getTime(positions.get(i + 1)) + ":" + positions.get(i + 1) + " is " + gap);
-                    }
+                    //if (gap >= 50) {
+                    //System.out.println("Number -->" + number + ":Gap between " + new DateUtilities().getTime(positions.get(i)) + ":" + positions.get(i) + " and " + new DateUtilities().getTime(positions.get(i + 1)) + ":" + positions.get(i + 1) + " is " + gap);
+                    //System.out.println(positions.get(i));
+                    //}
                     //  System.out.println(i + "");
                     if ((i == positions.size() - 2)) {
                         // System.out.println("Last Number Number->" + positions.get(i) + ":" + i);
