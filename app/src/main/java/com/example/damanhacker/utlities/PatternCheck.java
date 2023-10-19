@@ -30,13 +30,13 @@ public class PatternCheck {
             value.append(date).append("\n");
             value.append("\n");
             for (int k = 0; k < listData.size(); k++) {
-                if (listData.get(k).getValue().equals("Small")) {
-                    list.add("S");
+                if (String.valueOf(listData.get(k).getColor().charAt(0)).equals("R")) {
+                    list.add("R");
                 } else {
-                    list.add("B");
+                    list.add("G");
                 }
             }
-            //getMatch(list, pattern);
+            getMatch(listData, pattern, listData);
             //getDuplicateNumber(listData);
             Valuelist.add(value.toString());
             value.setLength(0);
@@ -49,7 +49,7 @@ public class PatternCheck {
         System.out.println("Date----->" + (dateList.get(dateList.size() - 2)));
         ArrayList<DataModelMainData> listData = dbHandler.getDataProcess((dateList.get(dateList.size() - 2)));
         //getDuplicateNumber(listData);
-        getMaximumNumber(listData);
+        //getMaximumNumber(listData);
 
     }
 
@@ -129,7 +129,7 @@ public class PatternCheck {
         }
     }
 
-    void getMatch(ArrayList<String> list, String pattern) {
+    void getMinMax(ArrayList<String> list, String pattern, ArrayList<DataModelMainData> listData) {
         StringBuilder concatenated = new StringBuilder();
         for (String str : list) {
             concatenated.append(str);
@@ -140,11 +140,36 @@ public class PatternCheck {
         while (matcher.find()) {
             int startPos = matcher.start();
             int endPos = matcher.end();
-            System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
-            value.append(startPos).append("-").append((endPos - 1)).append("\n");
+            //System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
+            value.append("SNO->").append(startPos + 1).append("->Number").append((listData.get(startPos).getNumber())).append("\n");
         }
     }
 
+    void getMatch(ArrayList<DataModelMainData> list, String pattern, ArrayList<DataModelMainData> listData) {
+        // Populate your customArrayList with your data here...
+
+        int numberToFind = 1;
+        int minGap = Integer.MAX_VALUE;
+        int maxGap = 0;
+        int lastIndex = -1;
+
+        for (int i = 0; i < list.size(); i++) {
+            int value = list.get(i).getNumber();
+            if (value == numberToFind) {
+                if (lastIndex != -1) {
+                    int currentGap = i - lastIndex;
+                    minGap = Math.min(minGap, currentGap);
+                    maxGap = Math.max(maxGap, currentGap);
+                }
+                lastIndex = i;
+            }
+        }
+        value.append("Minimum gap for ").append(numberToFind).append(": ").append(minGap).append("\n");
+        value.append("Maximum gap for ").append(numberToFind).append(": ").append(maxGap).append("\n");
+
+        System.out.println("Minimum gap for " + numberToFind + ": " + minGap);
+        System.out.println("Maximum gap for " + numberToFind + ": " + maxGap);
+    }
 
     public void getMaximumNumber(ArrayList<DataModelMainData> numbers) {
         Map<Integer, Integer> countMap = new HashMap<>();
@@ -169,5 +194,57 @@ public class PatternCheck {
         }
 
     }
+
+    public void getWiningPattern(ArrayList<DataModelMainData> customArrayList) {
+
+
+        // Create a new ArrayList to store the retrieved elements
+        List<DataModelMainData> retrievedElements = new ArrayList<>();
+        ArrayList<Integer> start = new ArrayList<>();
+        start = getStartIndex();
+        for (int k = 0; k < start.size(); k++) {
+
+            int startIndex = start.get(k);
+            int endIndex = start.get(k) + 20;
+            for (int i = startIndex; i < endIndex && i < customArrayList.size(); i++) {
+                retrievedElements.add(customArrayList.get(i));
+            }
+        }
+
+        // Display the retrieved elements
+        for (DataModelMainData element : retrievedElements) {
+            System.out.println(element.getColor());
+            // value.append("Pattern gap for ").append(numberToFind).append(": ").append(minGap).append("\n");
+
+        }
+
+    }
+
+    public ArrayList<Integer> getStartIndex() {
+        ArrayList<Integer> start = new ArrayList<>();
+        start.add(420);
+        start.add(600);
+        start.add(720);
+        start.add(840);
+        start.add(960);
+        start.add(1110);
+        start.add(1230);
+        start.add(1320);
+        return start;
+    }
+
+    public ArrayList<Integer> getEndIndex() {
+        ArrayList<Integer> start = new ArrayList<>();
+        start.add(420);
+        start.add(600);
+        start.add(720);
+        start.add(840);
+        start.add(960);
+        start.add(1110);
+        start.add(1230);
+        start.add(1320);
+        return start;
+    }
+
 
 }

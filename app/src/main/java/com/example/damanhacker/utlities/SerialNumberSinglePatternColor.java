@@ -8,7 +8,7 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class SerialNumberSinglePattern {
+public class SerialNumberSinglePatternColor {
     int matchingClear = 0;
     int number = 0;
 
@@ -55,7 +55,7 @@ public class SerialNumberSinglePattern {
         int matchPosition = currentPosition;
         if (dataList.size() == matchPosition) return;
         StringBuilder value = new StringBuilder();
-        String matchValue = dataList.get(matchPosition).getValue();
+        String matchValue = String.valueOf(dataList.get(matchPosition).getColor().charAt(0));
         String currentValue;
         loopMax = 0;
         matchingClear = 0;
@@ -64,7 +64,7 @@ public class SerialNumberSinglePattern {
         value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(matchValue).append("\n");
 
         for (int i = matchPosition; i < dataList.size(); i++) {
-            currentValue = dataList.get(i).getValue();
+            currentValue = String.valueOf(dataList.get(i).getColor().charAt(0));
             // value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(matchValue).append("\n");
 
             if ((valueMatching(currentValue, matchValue))) {
@@ -73,7 +73,7 @@ public class SerialNumberSinglePattern {
                 matchPattern++;
 
                 value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("\n");
-                if (matchPattern == 3) {
+                if (matchPattern == 1) {
                     //System.out.println("If Match Pattern---->" + matchPattern+":"+matchValue);
                     matchValue = convertOpositeValue(matchValue);
 
@@ -105,7 +105,7 @@ public class SerialNumberSinglePattern {
         System.out.println(str);
     }
 
-    public String convertOpositeValue(String str) {
+    public String convertOpositeValuee(String str) {
         String returnValue;
         if (str.equals("Small")) {
             returnValue = "Big";
@@ -115,6 +115,19 @@ public class SerialNumberSinglePattern {
         matchPattern = 0;
         return returnValue;
     }
+    public String convertOpositeValue(String str_) {
+        String str = String.valueOf(str_.charAt(0));
+
+        String returnValue;
+        if (str.equals("R")) {
+            returnValue = "G";
+        } else {
+            returnValue = "R";
+        }
+        matchPattern = 0;
+        return returnValue;
+    }
+
 
     public boolean valueMatching(String currentValue, String matchValue) {
         // System.out.println(currentValue + ":" + matchValue);

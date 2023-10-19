@@ -8,7 +8,7 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class SerialNumberSinglePattern {
+public class SerialNumberThreePatternColor {
     int matchingClear = 0;
     int number = 0;
 
@@ -36,7 +36,7 @@ public class SerialNumberSinglePattern {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
             if (data.getPeriod() % 10 == number) {
-            // (data.getNumber() == number) {
+
                 getMatch(serialNumberPositionMoveForward);
             }
             serialNumberPositionMoveForward++;
@@ -60,8 +60,7 @@ public class SerialNumberSinglePattern {
         loopMax = 0;
         matchingClear = 0;
         matchPosition++;
-        value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append(" : SNO=").append(number).append("\n\n");
-        value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(matchValue).append("\n");
+        value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\n\n");
 
         for (int i = matchPosition; i < dataList.size(); i++) {
             currentValue = dataList.get(i).getValue();
@@ -78,6 +77,9 @@ public class SerialNumberSinglePattern {
                     matchValue = convertOpositeValue(matchValue);
 
                 }
+
+                // System.out.println("If---->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
+
             } else {
                 //System.out.println("else-->" + matchValue + ":" + currentValue + ":" + dataList.get(i).getPeriod() + ":" + matchPattern);
                 matchPattern = 0;

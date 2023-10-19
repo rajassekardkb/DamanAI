@@ -21,8 +21,7 @@ import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.PatternCheck
-import com.example.damanhacker.utlities.SerialNumberSinglePattern
+import com.example.damanhacker.utlities.SerialNumberSinglePatternColor
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -83,7 +82,7 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
     }
 
     override fun onPatternSelection(pattern: Int) {
-        SerialNumberSinglePattern().patternCheckBasedOnSerialNumber(
+        SerialNumberSinglePatternColor().patternCheckBasedOnSerialNumber(
             listData, this@SinglePatternFragment, pattern
         )
         selectedNumber = pattern

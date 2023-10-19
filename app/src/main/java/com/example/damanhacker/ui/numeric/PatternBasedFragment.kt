@@ -55,7 +55,7 @@ class PatternBasedFragment : Fragment(), onResultList {
     }
 
     private fun patternCheck(pattern: String) {
-        // PatternCheck().pickDataP(dbHandler, pattern, this@PatternBasedFragment)
-        PatternCheck().pickDataDuplicateNumber(dbHandler)
+         PatternCheck().pickDataP(dbHandler, pattern, this@PatternBasedFragment)
+       // PatternCheck().pickDataDuplicateNumber(dbHandler)
     }
 }
