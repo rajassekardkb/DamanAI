@@ -35,8 +35,8 @@ public class SerialNumberSinglePatternColor {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            if (data.getPeriod() % 10 == number) {
-            // (data.getNumber() == number) {
+            //if (data.getPeriod() % 10 == number) {
+            if (data.getNumber() == number) {
                 getMatch(serialNumberPositionMoveForward);
             }
             serialNumberPositionMoveForward++;
@@ -61,7 +61,8 @@ public class SerialNumberSinglePatternColor {
         matchingClear = 0;
         matchPosition++;
         value.append("\n").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append(" : SNO=").append(number).append("\n\n");
-        value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(matchValue).append("\n");
+        //value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(matchValue).append("\n");
+        value.append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append(" : ").append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(matchValue).append("\n");
 
         for (int i = matchPosition; i < dataList.size(); i++) {
             currentValue = String.valueOf(dataList.get(i).getColor().charAt(0));
@@ -72,7 +73,7 @@ public class SerialNumberSinglePatternColor {
                 matchingClear++;
                 matchPattern++;
 
-                value.append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("\n");
+                value.append(new DateUtilities().getTime(dataList.get(i).getPeriod())).append(" : ").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(currentValue).append("\n");
                 if (matchPattern == 1) {
                     //System.out.println("If Match Pattern---->" + matchPattern+":"+matchValue);
                     matchValue = convertOpositeValue(matchValue);
@@ -115,6 +116,7 @@ public class SerialNumberSinglePatternColor {
         matchPattern = 0;
         return returnValue;
     }
+
     public String convertOpositeValue(String str_) {
         String str = String.valueOf(str_.charAt(0));
 

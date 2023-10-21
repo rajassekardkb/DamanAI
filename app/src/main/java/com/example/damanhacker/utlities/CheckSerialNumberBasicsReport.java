@@ -76,12 +76,15 @@ public class CheckSerialNumberBasicsReport {
         if (dataList.size() == matchPosition) {
             return;
         }
+        // String matchValue = String.valueOf(dataList.get(matchPosition).getColor().charAt(0));
+
         String matchValue = dataList.get(matchPosition).getValue();
 
 
         loopMax = 0;
 
         for (int i = startPosition; i < dataList.size(); i++) {
+            // String currentValue = String.valueOf(dataList.get(i).getColor().charAt(0));
             String currentValue = dataList.get(i).getValue();
             if (matchValue.equals(currentValue)) {
                 loopMax++;
@@ -116,7 +119,7 @@ public class CheckSerialNumberBasicsReport {
 
         if (matchingClear >= MAXPATTERN) {
             loopMaxInc++;
-            value.append("\n").append(new DateUtilities().getTime(value_)).append(":Count->").append(matchingClear);
+            value.append("\n").append(new DateUtilities().getTime(value_)).append(":").append(value_).append(":Count->").append(matchingClear);
         }
 
         matchingClear = 0;

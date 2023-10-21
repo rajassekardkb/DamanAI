@@ -19,13 +19,14 @@ import com.example.damanhacker.utlities.CheckSerialNumberBasics
 import com.example.damanhacker.utlities.CheckSerialNumberBasicsReport
 import com.example.damanhacker.utlities.DateUtilities
 import com.example.damanhacker.utlities.SortingDate
+import java.util.Collections
 
 class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
     private lateinit var binding: ReportFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
     private lateinit var dbHandler: DBHandler
-    var selectedNumber = 6
+    var selectedNumber = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -33,11 +34,16 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
             inflater, R.layout.report_fragment, container, false
         )
         dbHandler = DBHandler(context)
-        binding.TextViewDate.setOnClickListener {
-        }
+        binding.TextViewDate.setOnClickListener {}
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
 
-        report()
+        binding.btnView.setOnClickListener {
+            if (binding.editPattern.text.toString() != "") {
+                selectedNumber = binding.editPattern.text.toString().toInt()
+                report()
+            }
+        }
+
 
         return binding.root
     }
@@ -74,12 +80,9 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
     private fun report() {
         val list = SortingDate().sort(dbHandler.dateList)
-
         CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
-            list, this@ReportFragment, 9, requireContext()
+            list, this@ReportFragment, selectedNumber, requireContext()
         )
-
-
 
 
     }
