@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5ssp"
                 android:layout_weight="0.2"
-                android:fontFamily="@font/gordita_light"
+                android:fontFamily="@font/gordita_bold"
                 android:gravity="center|center_vertical"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp" />

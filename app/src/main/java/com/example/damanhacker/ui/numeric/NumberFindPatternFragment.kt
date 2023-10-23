@@ -14,19 +14,19 @@ import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterPattern
 import com.example.damanhacker.adapter.AdapterResult
 import com.example.damanhacker.database.DBHandler
-import com.example.damanhacker.databinding.SingleFragmentBinding
+import com.example.damanhacker.databinding.NumberFindFragmentBinding
 import com.example.damanhacker.intefaces.ItemOnClickListenerView
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.SerialNumberSinglePatternColor
+import com.example.damanhacker.utlities.NumberFindPatternColor
 import kotlinx.coroutines.launch
 import java.util.*
 
-class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView {
+class NumberFindPatternFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
-    private lateinit var binding: SingleFragmentBinding
+    private lateinit var binding: NumberFindFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
     private lateinit var dbHandler: DBHandler
     var dataResult = ArrayList<String>()
@@ -34,7 +34,7 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.single_fragment, container, false
+            inflater, R.layout.number_find_fragment, container, false
         )
         dbHandler = DBHandler(context)
         binding.TextViewDate.setOnClickListener {
@@ -61,7 +61,7 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
             patternRecyclerView(pattern)
 
             listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-            onPatternSelectionNumberAll()
+            //onPatternSelectionNumberAll()
         }
         return binding.root
     }
@@ -84,8 +84,9 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
 
     override fun onPatternSelection(pattern: Int) {
         dataResult = ArrayList<String>()
-        SerialNumberSinglePatternColor().patternCheckBasedOnSerialNumber(
-            listData, this@SinglePatternFragment, pattern
+        val number = getMachNumber(pattern)
+        NumberFindPatternColor().patternCheckBasedOnSerialNumber(
+            listData, this@NumberFindPatternFragment, pattern, number
         )
 
     }
@@ -93,8 +94,8 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
     private fun onPatternSelectionNumberAll() {
         dataResult = ArrayList<String>()
         for (i in 0..9) {
-            SerialNumberSinglePatternColor().patternCheckBasedOnSerialNumber(
-                listData, this@SinglePatternFragment, i
+            NumberFindPatternColor().patternCheckBasedOnSerialNumber(
+                listData, this@NumberFindPatternFragment, i, 0
             )
         }
     }
@@ -105,7 +106,9 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
         binding.recyclerViewPattern.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = AdapterPattern(
-                list = data, context = requireContext(), onResultList_ = this@SinglePatternFragment
+                list = data,
+                context = requireContext(),
+                onResultList_ = this@NumberFindPatternFragment
             )
             addItemDecoration(itemDecoration)
         }
@@ -134,7 +137,7 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
                     println(it)
                 }
                 listData = dbHandler.getDataProcess(binding.TextViewDate.text.toString())
-                onPatternSelectionNumberAll()
+                //onPatternSelectionNumberAll()
             }, year, month, day
         )
         datePickerDialog.show()
@@ -147,10 +150,42 @@ class SinglePatternFragment : Fragment(), onResultList, ItemOnClickListenerView 
         super.onResume()
     }
 
-    private fun setSelection(position: Int) {
-        binding.recyclerViewView.postDelayed({
-            binding.recyclerViewView.smoothScrollToPosition(position)
-        }, 1_000)
+    private fun getMachNumber(num: Int): Int {
+        var number = 0
+        when (num) {
+            0 -> {
+                number = 5
+            }
+            1 -> {
+                number = 2
+            }
+            2 -> {
+                number = 3
+            }
+            3 -> {
+                number = 4
+            }
+            4 -> {
+                number = 5
+            }
+            5 -> {
+                number = 0
+            }
+            6 -> {
+                number = 7
+            }
+            7 -> {
+                number = 8
+            }
+            8 -> {
+                number = 9
+            }
+            9 -> {
+                number = 0
+            }
+        }
+
+        return number
     }
 
 /*

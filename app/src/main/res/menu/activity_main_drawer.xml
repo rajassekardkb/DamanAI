@@ -40,5 +40,8 @@
         <item
             android:id="@+id/nav_numeric_color"
             android:title="Color Numeric" />
+        <item
+            android:id="@+id/nav_number_find"
+            android:title="Number Find" />
     </group>
 </menu>

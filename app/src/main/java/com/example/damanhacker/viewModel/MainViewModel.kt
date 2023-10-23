@@ -12,11 +12,9 @@ import com.example.damanhacker.model.DataModelMainResponse
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.Mapping
 import com.example.damanhacker.utlities.PatternCheck
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Response
+import kotlin.time.Duration.Companion.seconds
 
 class MainViewModel(val context: Context, private val onResponse: onResponse) : ViewModel() {
     private var dbHandler = DBHandler(context)
@@ -91,9 +89,12 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
         return listData
     }
 
+
     fun getDataDownloading(dbHandler: DBHandler, requestList: ArrayList<RequestGetData>) {
         viewModelScope.launch(Dispatchers.IO) {
             val allData = ArrayList<DataModelMainData>()
+            val delayDuration = 3.seconds // Adjust the duration as needed
+
             val deferredResponses = requestList.map { element ->
                 async {
                     val response = getApi(element)
@@ -101,12 +102,13 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
                         response.body()?.values?.let {
                             allData.addAll(it)
                             println("DataDownloading-> Request onSuccess->" + element)
-
                         }
                     } else {
                         println("DataDownloading-> Request Error->" + element)
                         onResponse.Error("Failed")
                     }
+
+                    delay(delayDuration) // Add a delay after each async call
                 }
             }
 

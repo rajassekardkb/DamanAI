@@ -42,8 +42,10 @@ class AdapterViewMainScreen(
             listItemBinding.textNumber.text = data.number.toString()
             val color = Mapping().getColor(data.number)
             // listItemBinding.textValues.text = Mapping().getColor(data.number)
-            if ((data.period % 10) == 6) {
+            if ((data.number) == 6) {
                 listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.item_select_back))
+            } else if ((data.number) == 9) {
+                listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.selector_purple))
             } else {
                 listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.white))
             }

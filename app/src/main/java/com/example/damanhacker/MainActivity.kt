@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_report,
                 R.id.nav_single,
                 R.id.nav_downloading,
-                R.id.nav_numeric_color
+                R.id.nav_numeric_color,
+                R.id.nav_number_find
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

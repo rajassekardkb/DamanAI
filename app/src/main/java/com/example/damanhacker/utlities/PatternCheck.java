@@ -36,7 +36,7 @@ public class PatternCheck {
                     list.add("G");
                 }
             }
-            getMatch(listData, pattern, listData);
+            getMinMax(list, pattern, listData);
             //getDuplicateNumber(listData);
             Valuelist.add(value.toString());
             value.setLength(0);
@@ -79,7 +79,7 @@ public class PatternCheck {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date()); // Set the initial date
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             dateList.add(dateFormat.format(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_YEAR, -1); // Subtract one day from the current date
         }
