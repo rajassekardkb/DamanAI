@@ -79,7 +79,7 @@ public class PatternCheck {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date()); // Set the initial date
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 30; i++) {
             dateList.add(dateFormat.format(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_YEAR, -1); // Subtract one day from the current date
         }

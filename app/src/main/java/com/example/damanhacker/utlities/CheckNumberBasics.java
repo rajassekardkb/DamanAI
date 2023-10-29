@@ -59,7 +59,7 @@ public class CheckNumberBasics {
         matchingClear = 0;
         StringBuilder value = new StringBuilder();
 
-        value.append("\t").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\n\n");
+        value.append("\t").append(new DateUtilities().getTime(dataList.get(currentPosition).getPeriod())).append("\t").append("Number-->").append(number).append("\t").append(dataList.size()).append("\n\n");
         value.append(dataList.get(currentPosition).getPeriod()).append(" : ").append(dataList.get(currentPosition).getNumber()).append(" : ").append(dataList.get(currentPosition).getColor()).append("\n");
         String matchValue = dataList.get(currentPosition).getColor();
         currentPosition++;

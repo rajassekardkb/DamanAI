@@ -1,5 +1,6 @@
 package com.example.damanhacker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.damanhacker.databinding.ActivityMainBinding
+import com.example.damanhacker.services.ServiceDaman
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +45,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_single,
                 R.id.nav_downloading,
                 R.id.nav_numeric_color,
-                R.id.nav_number_find
+                R.id.nav_number_find,
+                R.id.nav_number
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -60,4 +63,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
 }

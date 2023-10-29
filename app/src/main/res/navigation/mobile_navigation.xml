@@ -72,4 +72,9 @@
         android:name="com.example.damanhacker.ui.numeric.NumberFindPatternFragment"
         android:label="Number Find"
         tools:layout="@layout/number_find_fragment" />
+    <fragment
+        android:id="@+id/nav_number"
+        android:name="com.example.damanhacker.ui.numeric.NumberFragment"
+        android:label="Find Number"
+        tools:layout="@layout/number_fragment" />
 </navigation>

@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MainViewModel(val context: Context, private val onResponse: onResponse) : ViewModel() {
+class DownliadingViewModel(val context: Context, private val onResponse: onResponse) : ViewModel() {
     var masterList = ArrayList<DataModelMainData>()
 
     private var dbHandler = DBHandler(context)

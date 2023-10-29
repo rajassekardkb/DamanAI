@@ -223,8 +223,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void insertDataIfNotExists(ArrayList<DataModelMainData> dataList) {
         for (int i = 0; i < dataList.size(); i++) {
+            System.out.println("DataDownloading-> Request size->"+dataList.size()+":"+i);
+
             DataModelMainData data = dataList.get(i);
             if (!dataExists(data.getDate(), String.valueOf(data.getPeriod()))) {
+                System.out.println("DataDownloading-> Request ins->"+data.getPeriod()+":"+data.getDate());
                 SQLiteDatabase db = this.getWritableDatabase();
                 ContentValues values = new ContentValues();
                 values.put(DM_NUMBER, data.getNumber());

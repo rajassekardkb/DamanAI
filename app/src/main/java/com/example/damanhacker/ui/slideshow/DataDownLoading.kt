@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
@@ -18,7 +19,11 @@ import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.RequestGetData
 import com.example.damanhacker.utlities.*
-import com.example.damanhacker.viewModel.MainViewModel
+import com.example.damanhacker.utlities.UtlString.Companion.GET_DAMAN_LIST
+import com.example.damanhacker.viewModel.DownliadingViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -37,8 +42,11 @@ class DataDownLoading : Fragment(), onResponse, onResultList {
             inflater, R.layout.fragment_data_downloding, container, false
         )
         dbHandler = DBHandler(context)
+        lifecycleScope.launch(Dispatchers.IO) {
+            getData()
 
-        getData()
+        }
+
         return binding.root
     }
 
@@ -77,20 +85,19 @@ class DataDownLoading : Fragment(), onResponse, onResultList {
         //binding.progress.visibility = View.GONE
     }
 
-    private fun getData() {
+    private suspend fun getData() {
         try {
-            val requesList = ArrayList<RequestGetData>()
+            val viewModel = DownliadingViewModel(requireContext(), this)
             val dateList = SortingDate().sort(PatternCheck().last15Days)
             dateList.forEachIndexed { _, element ->
-                requesList.add(
-                    RequestGetData(
-                        CHK = "GET_DAMAN_LIST", DATE = element
-                    )
+                val request = RequestGetData(
+                    CHK = GET_DAMAN_LIST, DATE = element
                 )
+                viewModel.getDataDownloading(dbHandler, request)
+                delay(1000)
             }
-            MainViewModel(
-                requireContext(), this
-            ).getDataDownloading(dbHandler, requesList)
+            viewModel.insertData()
+            binding.progress.visibility = View.GONE
         } catch (e: Exception) {
             e.printStackTrace()
         }
