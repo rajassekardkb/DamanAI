@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "61279403711",
+    "project_id": "damanhacker",
+    "storage_bucket": "damanhacker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61279403711:android:80894885791506cdf6500a",
+        "android_client_info": {
+          "package_name": "com.example.damanhacker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCltP6OUlhloaYIR-caVP7L0fC6pdd9_HQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
