@@ -21,6 +21,7 @@ import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.ui.slideshow.NumericViewModel
 import com.example.damanhacker.utlities.CheckNumberBasics
+import com.example.damanhacker.utlities.CheckNumberBasicsServer
 import com.example.damanhacker.utlities.DateUtilities
 import kotlinx.coroutines.launch
 import java.util.*
@@ -57,6 +58,7 @@ class NumberFragment : Fragment(), onResultList {
             )
             patternRecyclerView(pattern)
             listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+
         }
         return binding.root
     }

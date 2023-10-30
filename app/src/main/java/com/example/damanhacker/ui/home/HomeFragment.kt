@@ -2,7 +2,6 @@ package com.example.damanhacker.ui.home
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import com.example.damanhacker.databinding.FragmentHomeBinding
 import com.example.damanhacker.intefaces.onResponse
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.services.ServiceDaman
 import com.example.damanhacker.utlities.*
 import com.example.damanhacker.viewModel.MainViewModel
 import java.util.*
@@ -45,13 +43,15 @@ class HomeFragment : Fragment(), onResponse, onResultList {
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
 
         getData()
-        val serviceIntent = Intent(requireContext(), ServiceDaman::class.java)
-        requireContext().startService(serviceIntent)
+        CheckNumberBasicsServer().patternCheckBasedOnSerialNumber(
+            dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+        )
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
+
     }
 
     override fun onStart() {

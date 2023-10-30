@@ -97,11 +97,11 @@ class MainViewModel(val context: Context, private val onResponse: onResponse) : 
             val response = getApi(request)
             if (response.isSuccessful) {
                 response.body()?.values?.let {
-                    println("DataDownloading-> Request onSuccess->" + request)
+                    //println("DataDownloading-> Request onSuccess->" + request)
                     masterList.addAll(it)
                 }
             } else {
-                println("DataDownloading-> Request Error->" + request)
+                //println("DataDownloading-> Request Error->" + request)
                 onResponse.Error("Failed")
             }
 
