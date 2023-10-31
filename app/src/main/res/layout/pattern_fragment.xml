@@ -33,11 +33,26 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginStart="@dimen/_35ssp"
                         android:gravity="center_horizontal|center"
-                        android:text="SSBSSBSSB"
                         android:paddingLeft="@dimen/_9ssp"
                         android:paddingTop="@dimen/_9ssp"
                         android:paddingRight="@dimen/_11ssp"
                         android:paddingBottom="@dimen/_9ssp"
+                        android:text="SSBSSBSSB"
+                        android:textSize="@dimen/_13ssp" />
+
+                    <EditText
+                        android:id="@+id/editPatternflag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/_3ssp"
+                        android:gravity="center_horizontal|center"
+                        android:inputType="number"
+                        android:paddingLeft="@dimen/_9ssp"
+                        android:paddingTop="@dimen/_9ssp"
+                        android:paddingRight="@dimen/_11ssp"
+                        android:paddingBottom="@dimen/_9ssp"
+                        android:text="0"
                         android:textSize="@dimen/_13ssp" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -50,12 +65,19 @@
                         android:paddingLeft="@dimen/_15ssp"
                         android:paddingRight="@dimen/_15ssp"
                         android:paddingBottom="@dimen/_5ssp"
-                        android:text="Submit"
+                        android:text="Check"
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewPattern"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"

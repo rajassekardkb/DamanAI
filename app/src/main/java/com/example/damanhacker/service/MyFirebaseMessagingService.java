@@ -13,8 +13,10 @@ String TAG="MyFirebaseMessagingService";
     @Override
     public void onNewToken(@NonNull String token) {
 
+        Log.d(TAG, "Token data payload->: " + token);
 
         //String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
         super.onNewToken(token);
     }
 

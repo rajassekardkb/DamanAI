@@ -44,6 +44,54 @@ public class PatternCheck {
         onResult.onItemText(Valuelist);
     }
 
+    public void checkColorPattern(DBHandler dbHandler, String pattern, onResultList onResult) {
+        ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
+        ArrayList<String> list;
+        for (int i = 0; i < dateList.size(); i++) {
+            String date = dateList.get(i);
+            ArrayList<DataModelMainData> listData = dbHandler.getDataProcess(date);
+            list = new ArrayList<>();
+            value.append(date).append("\n");
+            value.append("\n");
+            for (int k = 0; k < listData.size(); k++) {
+                if (String.valueOf(listData.get(k).getColor().charAt(0)).equals("R")) {
+                    list.add("R");
+                } else {
+                    list.add("G");
+                }
+            }
+            getMinMax(list, pattern, listData);
+            //getDuplicateNumber(listData);
+            Valuelist.add(value.toString());
+            value.setLength(0);
+        }
+        onResult.onItemText(Valuelist);
+    }
+
+    public void checkValuePattern(DBHandler dbHandler, String pattern, onResultList onResult) {
+        ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
+        ArrayList<String> list;
+        for (int i = 0; i < dateList.size(); i++) {
+            String date = dateList.get(i);
+            ArrayList<DataModelMainData> listData = dbHandler.getDataProcess(date);
+            list = new ArrayList<>();
+            value.append(date).append("\n");
+            value.append("\n");
+            for (int k = 0; k < listData.size(); k++) {
+                if (listData.get(k).getValue().equals("Small")) {
+                    list.add("S");
+                } else {
+                    list.add("B");
+                }
+            }
+            getMinMax(list, pattern, listData);
+            //getDuplicateNumber(listData);
+            Valuelist.add(value.toString());
+            value.setLength(0);
+        }
+        onResult.onItemText(Valuelist);
+    }
+
     public void pickDataDuplicateNumber(DBHandler dbHandler) {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         System.out.println("Date----->" + (dateList.get(dateList.size() - 2)));
@@ -141,7 +189,7 @@ public class PatternCheck {
             int startPos = matcher.start();
             int endPos = matcher.end();
             //System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
-            value.append("SNO->").append(startPos + 1).append("->Number").append((listData.get(startPos).getNumber())).append("\n");
+            value.append("SNO->").append(startPos + 1).append(":Time->").append(new DateUtilities().getTime(startPos + 1)).append("->Number ").append((listData.get(startPos).getNumber())).append("\n");
         }
     }
 
