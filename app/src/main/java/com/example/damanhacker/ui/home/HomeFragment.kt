@@ -43,9 +43,9 @@ class HomeFragment : Fragment(), onResponse, onResultList {
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
 
         getData()
-        CheckNumberBasicsServer().patternCheckBasedOnSerialNumber(
+      /*  CheckNumberBasicsServer().patternCheckBasedOnSerialNumber(
             dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-        )
+        )*/
         return binding.root
     }
 
@@ -90,6 +90,12 @@ class HomeFragment : Fragment(), onResponse, onResultList {
             MainViewModel(
                 requireContext(), this@HomeFragment
             ).getData(binding.TextViewDate.text.toString())
+
+            val listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+            val list_ = PatternCheck().numberAttachedValue(listData)
+            CheckSerialNumberRelated().patternCheckBasedOnSerialNumber(
+                list_, listData, this@HomeFragment
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }

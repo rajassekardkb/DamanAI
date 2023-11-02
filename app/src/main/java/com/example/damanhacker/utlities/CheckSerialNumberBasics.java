@@ -3,9 +3,6 @@ package com.example.damanhacker.utlities;
 
 import static com.example.damanhacker.utlities.UtlString.MAXPATTERN;
 
-import android.content.Context;
-
-import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 
@@ -66,7 +63,7 @@ public class CheckSerialNumberBasics {
         while (serialNumberPositionMoveForward < serialNumberList.size()) {
             serialNumberPosition = serialNumberList.get(serialNumberPositionMoveForward);
 
-            getMatch(serialNumberPosition, (serialNumberPosition + 1));
+            getMatch(serialNumberPosition);
             serialNumberPositionMoveForward++;
         }
         for (int k = 0; k < finalResult.size(); k++) {
@@ -75,17 +72,10 @@ public class CheckSerialNumberBasics {
     }
 
 
-    public void getMatch(int startPosition, int matchPosition) {
-        print("PositionCheck-->" + startPosition + ":" + matchPosition + ":" + dataList.size());
-        if (dataList.size() == matchPosition) {
-            return;
-        }
-        String matchValue = dataList.get(matchPosition).getValue();
-
+    public void getMatch(int startPosition) {
         StringBuilder value = new StringBuilder();
-
-        value.append("\n").append("Serial->").append(currentSerialNumber);
-        value.append("\n").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
+        value.append("Serial->").append(currentSerialNumber);
+        value.append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
         loopMax = 0;
 
         for (int i = startPosition; i < dataList.size(); i++) {

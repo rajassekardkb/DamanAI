@@ -16,6 +16,8 @@ import com.example.damanhacker.databinding.PatternFragmentBinding
 import com.example.damanhacker.intefaces.onPatternSelection
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.patternData
+import com.example.damanhacker.utlities.CheckSerialNumberRelated
+import com.example.damanhacker.utlities.DateUtilities
 import com.example.damanhacker.utlities.PatternCheck
 
 class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
@@ -86,7 +88,8 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
             PatternCheck().checkValuePattern(dbHandler, pattern, this@PatternBasedFragment)
         } else {
             PatternCheck().checkColorPattern(dbHandler, pattern, this@PatternBasedFragment)
-
         }
+
+
     }
 }

@@ -5,6 +5,7 @@ import android.os.Build;
 import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
+import com.example.damanhacker.model.getData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -294,5 +295,34 @@ public class PatternCheck {
         return start;
     }
 
+    public ArrayList<getData> numberAttachedValue(ArrayList<DataModelMainData> arrayList) {
+
+        ArrayList<getData> repeatedValues = new ArrayList<>();
+        int i = 0;
+
+        while (i < arrayList.size()) {
+            int currentValue = arrayList.get(i).getNumber();
+            int sequenceStartIndex = i;
+
+            while (i < arrayList.size() && arrayList.get(i).getNumber() == currentValue) {
+                i++;
+            }
+
+            if (i - sequenceStartIndex > 1) {
+                getData data = new getData();
+                data.setValue(currentValue);
+                data.setPosition(sequenceStartIndex + 1);
+                repeatedValues.add(data);
+            }
+        }
+
+        for (int j = 0; j < repeatedValues.size(); j++) {
+            getData data = repeatedValues.get(j);
+
+            //System.out.println("Repeated value: " + data.getValue() + ":Position->" + data.getPosition());
+
+        }
+        return repeatedValues;
+    }
 
 }
