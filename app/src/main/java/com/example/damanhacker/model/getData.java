@@ -9,8 +9,16 @@ public class getData {
         this.position = position;
     }
 
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+
     public int getValue() {
         return value;
+    }
+
+    public int getPeriod() {
+        return period;
     }
 
     public void setValue(int value) {
@@ -19,5 +27,7 @@ public class getData {
 
     int position;
     int value;
+    int period;
+
 
 }

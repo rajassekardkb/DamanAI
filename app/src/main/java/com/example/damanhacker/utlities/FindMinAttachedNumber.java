@@ -6,8 +6,9 @@ import com.example.damanhacker.model.DataModelMainData;
 
 import java.util.ArrayList;
 
-public class FindDuplicateNumberCount {
+public class FindMinAttachedNumber {
     int numberOfCounts = 0;
+    int number = 0;
     int gap = 0;
     int totalCount = 0;
     ArrayList<DataModelMainData> dataList;

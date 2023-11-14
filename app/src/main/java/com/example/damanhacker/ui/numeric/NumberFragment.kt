@@ -1,5 +1,6 @@
 package com.example.damanhacker.ui.numeric
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +22,6 @@ import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.model.patternData
 import com.example.damanhacker.ui.slideshow.NumericViewModel
 import com.example.damanhacker.utlities.CheckNumberBasics
-import com.example.damanhacker.utlities.CheckNumberBasicsServer
 import com.example.damanhacker.utlities.DateUtilities
 import kotlinx.coroutines.launch
 import java.util.*
@@ -83,9 +83,12 @@ class NumberFragment : Fragment(), onResultList {
         )
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun patternRecyclerView(data: ArrayList<patternData>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-        itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
+        context?.let {
+            itemDecoration.setDrawable(it.getDrawable(R.drawable.divider)!!)
+        }
         binding.recyclerViewPattern.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = AdapterPattern(

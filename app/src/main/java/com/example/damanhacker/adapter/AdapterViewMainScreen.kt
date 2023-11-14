@@ -11,19 +11,19 @@ import com.example.damanhacker.databinding.MainListItemBinding
 import com.example.damanhacker.model.DataModelMainData
 import com.example.damanhacker.utlities.DateUtilities
 import com.example.damanhacker.utlities.Mapping
+import com.example.damanhacker.utlities.PatternCheck
 
 
 class AdapterViewMainScreen(
-    private val list: ArrayList<DataModelMainData>, private val context: Context
+    public val list: ArrayList<DataModelMainData>, private val context: Context
 ) : RecyclerView.Adapter<AdapterViewMainScreen.ViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = MainListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(v, context)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(list[position])
+        holder.bindItem(list[position], position, list.size, list)
         holder.itemView.setOnClickListener {
             //listener(animalList[position], position)
         }
@@ -36,19 +36,23 @@ class AdapterViewMainScreen(
     class ViewHolder(
         private var listItemBinding: MainListItemBinding, private var context: Context
     ) : RecyclerView.ViewHolder(listItemBinding.root) {
-        fun bindItem(data: DataModelMainData) {
+        fun bindItem(
+            data: DataModelMainData, position_: Int, size_: Int, list: ArrayList<DataModelMainData>
+        ) {
             listItemBinding.textTime.text = DateUtilities().getTime(data.period)
             listItemBinding.textPeriod.text = data.period.toString()
+            listItemBinding.textPeriodp.text = ((size_ - 1) - position_).toString()
+
             listItemBinding.textNumber.text = data.number.toString()
             val color = Mapping().getColor(data.number)
-            // listItemBinding.textValues.text = Mapping().getColor(data.number)
-            if ((data.number) == 6) {
+
+            if (chk(list, data.period)) {
                 listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.item_select_back))
-            } else if ((data.number) == 9) {
-                listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.selector_purple))
             } else {
                 listItemBinding.constHeader.setBackgroundColor(context.resources.getColor(R.color.white))
             }
+
+
             if (data.number % 2 == 0) listItemBinding.textNumber.setTextColor(
                 ContextCompat.getColor(
                     context, R.color.red
@@ -115,6 +119,21 @@ class AdapterViewMainScreen(
                 }
             }
 
+        }
+
+        fun chk(list: ArrayList<DataModelMainData>, period: Int): Boolean {
+
+            var check = false
+
+            val listAttached = PatternCheck().numberAttachedValue_(list)
+
+            listAttached.forEachIndexed { index, data_ ->
+                if (data_.period == period) {
+                    check = true
+                }
+                //println("CHECK-->" + data_.period + ":" + period + ":" + check)
+            }
+            return check
         }
     }
 

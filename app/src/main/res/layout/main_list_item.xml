@@ -33,16 +33,32 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
 
-            <TextView
-                android:id="@+id/textPeriod"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20ssp"
-                android:layout_weight="0.4"
-                android:fontFamily="@font/gordita_light"
-                android:gravity="center_horizontal|center_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13ssp" />
+                android:layout_weight="0.8">
+
+                <TextView
+                    android:id="@+id/textPeriod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20ssp"
+                    android:fontFamily="@font/gordita_light"
+                    android:gravity="left|left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13ssp" />
+
+                <TextView
+                    android:id="@+id/textPeriodp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2ssp"
+                    android:fontFamily="@font/gordita_light"
+                    android:gravity="left|left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_7ssp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textNumber"
@@ -61,9 +77,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5ssp"
                 android:layout_weight="0.5"
+                android:fontFamily="@font/gordita_light"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:fontFamily="@font/gordita_light"
 
                 android:textSize="@dimen/_11ssp"
                 android:visibility="visible" />

@@ -16,8 +16,6 @@ import com.example.damanhacker.databinding.PatternFragmentBinding
 import com.example.damanhacker.intefaces.onPatternSelection
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.patternData
-import com.example.damanhacker.utlities.CheckSerialNumberRelated
-import com.example.damanhacker.utlities.DateUtilities
 import com.example.damanhacker.utlities.PatternCheck
 
 class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
@@ -31,18 +29,37 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
             inflater, R.layout.pattern_fragment, container, false
         )
         binding.btnView.setOnClickListener {
-            this.onPatternSelection(binding.editPattern.text.toString().trim())
+            //this.onPatternSelection(binding.editPattern.text.toString().trim())
         }
         val pattern = arrayListOf(
+            patternData("10101", 2),
+            patternData("20202", 2),
+            patternData("30303", 2),
+            patternData("40404", 2),
+            patternData("65656", 2),
+            patternData("75757", 2),
+            patternData("85858", 2),
+            patternData("95959", 2),
+
+
             patternData("SSSSSSS", 1),
             patternData("BBBBBBB", 1),
             patternData("SBSBSBS", 1),
-            patternData("BSSSSBBBBBB", 2),
-            patternData("BSSSSSBBBBBB", 3),
-            patternData("SBBBBSSSSSS", 4),
-            patternData("SBBBBBSSSSSS", 5),
-            patternData("SSBBBSSS", 6),
-        )
+            patternData("BSSSSBBBBBB", 1),
+            patternData("BSSSSSBBBBBB", 1),
+            patternData("SBBBBSSSSSS", 1),
+            patternData("SBBBBBSSSSSS", 1),
+            patternData("SSBBBSSS", 1),
+            patternData("GGGGGGG", 3),
+            patternData("RRRRRRR", 3),
+            patternData("RGRGRGR", 3),
+            patternData("GRRGGGRRRG", 3),
+            patternData("RGGGGRRRRRRR", 3),
+            patternData("RGGGGGRRRRRRR", 3),
+            patternData("GRRRRGGGGGGG", 3),
+            patternData("GRRRRRGGGGGGG", 3),
+
+            )
         patternRecyclerView(pattern)
         dbHandler = DBHandler(context)
         return binding.root
@@ -83,13 +100,17 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
         }
     }
 
-    override fun onPatternSelection(pattern: String) {
-        if (binding.editPatternflag.text.toString() == "0") {
-            PatternCheck().checkValuePattern(dbHandler, pattern, this@PatternBasedFragment)
-        } else {
-            PatternCheck().checkColorPattern(dbHandler, pattern, this@PatternBasedFragment)
+    override fun onPatternSelection(pattern: String, id: Int) {
+        when (id) {
+            1 -> {
+                PatternCheck().checkValuePattern(dbHandler, pattern, this@PatternBasedFragment)
+            }
+            2 -> {
+                PatternCheck().checkNumberPattern(dbHandler, pattern, this@PatternBasedFragment)
+            }
+            3 -> {
+                PatternCheck().checkColorPattern(dbHandler, pattern, this@PatternBasedFragment)
+            }
         }
-
-
     }
 }

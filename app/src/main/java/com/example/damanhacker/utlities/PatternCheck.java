@@ -69,6 +69,26 @@ public class PatternCheck {
         onResult.onItemText(Valuelist);
     }
 
+    public void checkNumberPattern(DBHandler dbHandler, String pattern, onResultList onResult) {
+        ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
+        ArrayList<String> list;
+        for (int i = 0; i < dateList.size(); i++) {
+            String date = dateList.get(i);
+            ArrayList<DataModelMainData> listData = dbHandler.getDataProcess(date);
+            list = new ArrayList<>();
+            value.append(date).append("\n");
+            value.append("\n");
+            for (int k = 0; k < listData.size(); k++) {
+                list.add(listData.get(k).getNumber() + "");
+            }
+            getMinMax(list, pattern, listData);
+            //getDuplicateNumber(listData);
+            Valuelist.add(value.toString());
+            value.setLength(0);
+        }
+        onResult.onItemText(Valuelist);
+    }
+
     public void checkValuePattern(DBHandler dbHandler, String pattern, onResultList onResult) {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         ArrayList<String> list;
@@ -190,7 +210,11 @@ public class PatternCheck {
             int startPos = matcher.start();
             int endPos = matcher.end();
             //System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
-            value.append("SNO->").append(startPos + 1).append(":Time->").append(new DateUtilities().getTime(startPos + 1)).append("->Number ").append((listData.get(startPos).getNumber())).append("\n");
+            int number = 1001;
+            if ((startPos) > 2) {
+                number = listData.get(startPos - 1).getNumber();
+            }
+            value.append("SNO->").append(startPos + 1).append(":").append(new DateUtilities().getTime(startPos + 1)).append("->Number ").append((listData.get(startPos).getNumber())).append("->n ").append(number + "").append("\n");
         }
     }
 
@@ -295,6 +319,44 @@ public class PatternCheck {
         return start;
     }
 
+    public void findContinuousOddEvenSequences(ArrayList<DataModelMainData> arrayList) {
+        List<Integer> oddSequence = new ArrayList<>();
+        List<Integer> evenSequence = new ArrayList<>();
+        int currentIndex = 0;
+
+        for (DataModelMainData number : arrayList) {
+            if (number.getNumber() % 2 == 0) {
+                oddSequence.clear();
+                evenSequence.add(number.getNumber());
+            } else {
+                evenSequence.clear();
+                oddSequence.add(number.getNumber());
+            }
+
+            if (evenSequence.size() == 4) {
+                System.out.println("Continuous Even Sequence: " + evenSequence + " (Starting index: " + (currentIndex - evenSequence.size() + 1) + ")");
+            }
+
+            if (oddSequence.size() == 4) {
+                System.out.println("Continuous Odd Sequence: " + oddSequence + " (Starting index: " + (currentIndex - oddSequence.size() + 1) + ")");
+            }
+
+            currentIndex++;
+        }
+    }
+
+    public ArrayList<String> findMinNumber() {
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                list.add(i + ":" + j);
+                //System.out.println("findMinNumber--->" + i + ":" + j);
+            }
+        }
+        return list;
+    }
+
+
     public ArrayList<getData> numberAttachedValue(ArrayList<DataModelMainData> arrayList) {
 
         ArrayList<getData> repeatedValues = new ArrayList<>();
@@ -319,7 +381,39 @@ public class PatternCheck {
         for (int j = 0; j < repeatedValues.size(); j++) {
             getData data = repeatedValues.get(j);
 
-            //System.out.println("Repeated value: " + data.getValue() + ":Position->" + data.getPosition());
+            // System.out.println("Repeated value: " + data.getValue() + ":Position->" + data.getPosition());
+
+        }
+        return repeatedValues;
+    }
+
+    public ArrayList<getData> numberAttachedValue_(ArrayList<DataModelMainData> arrayList) {
+
+        ArrayList<getData> repeatedValues = new ArrayList<>();
+        int i = 0;
+
+        while (i < arrayList.size()) {
+            int currentValue = arrayList.get(i).getNumber();
+            int period = arrayList.get(i).getPeriod();
+            int sequenceStartIndex = i;
+
+            while (i < arrayList.size() && arrayList.get(i).getNumber() == currentValue) {
+                i++;
+            }
+
+            if (i - sequenceStartIndex >= 4) {
+                getData data = new getData();
+                data.setValue(currentValue);
+                data.setPosition(sequenceStartIndex + 1);
+                data.setPeriod(period);
+                repeatedValues.add(data);
+            }
+        }
+
+        for (int j = 0; j < repeatedValues.size(); j++) {
+            getData data = repeatedValues.get(j);
+
+            // System.out.println("Repeated value: " + data.getValue() + ":Position->" + data.getPosition());
 
         }
         return repeatedValues;

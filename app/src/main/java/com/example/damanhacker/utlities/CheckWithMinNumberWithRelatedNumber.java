@@ -1,16 +1,12 @@
 package com.example.damanhacker.utlities;
 
 
-import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
-import com.example.damanhacker.model.getData;
-import com.example.damanhacker.model.outPutResponse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class CheckSerialNumberRelated {
+public class CheckWithMinNumberWithRelatedNumber {
     int matchingClear = 0;
     int masterMatchValue = 0;
     onResultList onResultList_;
@@ -20,49 +16,30 @@ public class CheckSerialNumberRelated {
     int serialCheck = 0;
     int serialNumberPositionMoveForward = 0;
     int serialNumberPosition = 0;
-    int previousPeriod = 0;
-    int currentPeriod = 0;
-
     boolean serialEnable = false;
 
-    ArrayList<getData> serialNumberList = new ArrayList<>();
+    ArrayList<String> serialNumberList = new ArrayList<>();
     ArrayList<DataModelMainData> dataList;
     ArrayList<String> finalResult = new ArrayList<>();
-    ArrayList<outPutResponse> outPutResult = new ArrayList<>();
 
-    public void init(DBHandler dbHandler, onResultList onResult) {
-        ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
-        Collections.reverse(dateList);
-        for (int i = 0; i < dateList.size(); i++) {
-            String date = dateList.get(i);
-            finalResult.add(date + "---------------------");
-            ArrayList<DataModelMainData> listData = dbHandler.getDataProcess(date);
-            ArrayList<getData> list_ = new PatternCheck().numberAttachedValue(listData);
-            patternCheckBasedOnSerialNumber(list_, listData, onResult);
-            finalResult.add("\n");
-
-        }
+    public void patternCheckBasedOnSerialNumber(ArrayList<String> listN_, ArrayList<DataModelMainData> _, onResultList onResult) {
+        this.dataList = _;
+        this.serialNumberList = listN_;
+        onResultList_ = onResult;
+        picSerialNumberBasics();
+        finalResult.add("---------------------");
         if (onResultList_ != null) {
             onResultList_.onItemText(finalResult);
         }
     }
 
-    public void patternCheckBasedOnSerialNumber(ArrayList<getData> listN_, ArrayList<DataModelMainData> _, onResultList onResult) {
-        this.dataList = _;
-        this.serialNumberList = listN_;
-        onResultList_ = onResult;
-        picSerialNumberBasics();
-//        finalResult.add("---------------------");
-    }
-
-
     public void picSerialNumberBasics() {
         System.out.println("NumberRelated size->" + serialNumberList.size());
+
         serialNumberPositionMoveForward = 0;
         while (serialNumberPositionMoveForward < serialNumberList.size()) {
-            serialNumberPosition = serialNumberList.get(serialNumberPositionMoveForward).getPosition();
-            masterMatchValue = serialNumberList.get(serialNumberPositionMoveForward).getValue();
-            getMatch((serialNumberPosition + 1));
+            String[] values = serialNumberList.get(serialNumberPositionMoveForward).split(":");
+            getMatch(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
             serialNumberPositionMoveForward++;
         }
         System.out.println("NumberRelated Total Count->" + ":" + finalResult.size());
@@ -72,42 +49,42 @@ public class CheckSerialNumberRelated {
     }
 
 
-    public void getMatch(int startPosition) {
-        if (dataList.size() == startPosition) {
-            return;
-        }
+    public void getMatch(int matchValue1, int matchValue2) {
+        // if (dataList.size() == startPosition) {
+        //   return;
+        //}
 
+        masterMatchValue = matchValue2;
         StringBuilder value = new StringBuilder();
 
-        currentPeriod = dataList.get(startPosition).getPeriod();
-        int pr = currentPeriod - previousPeriod;
-        previousPeriod = currentPeriod;
-
-        value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
+        //value.append("").append("Position->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":Time->").append(new DateUtilities().getTime(dataList.get(i).getPeriod()));
         loopMax = 0;
         //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
-        for (int i = startPosition; i < dataList.size(); i++) {
 
+        for (int i = 0; i < dataList.size(); i++) {
             int currentValue = dataList.get(i).getNumber();
+            System.out.println("Check Min Number-->" + matchValue1 + ":" + currentValue);
+            if (matchValue1 == currentValue) {
+                if (!matchSB(masterMatchValue, currentValue)) {
+                    loopMax++;
+                    value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
+                    matchingClear++;
+                    if (i == dataList.size() - 1) {
+                        addValue(value.toString());
+                    }
+                } else {
+                    addValue(value.toString());
+                    value.setLength(0);
+                    //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
+                    int lp = loopMax + serialCheck;
 
-            if (!matchSB(masterMatchValue, currentValue)) {
-                loopMax++;
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
-                matchingClear++;
-                if (i == dataList.size() - 1) {
-                    addValue(value + (":P->" + pr));
+                    if (lp >= dataList.get(i).getPeriod()) {
+                        loopMax = 0;
+                        serialNumberPositionMoveForward++;
+                    }
+                    break;
                 }
-            } else {
-                addValue(value + (":P->" + pr));
-                value.setLength(0);
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
-                int lp = loopMax + serialCheck;
 
-                if (lp >= dataList.get(i).getPeriod()) {
-                    loopMax = 0;
-                    serialNumberPositionMoveForward++;
-                }
-                break;
             }
         }
     }
@@ -115,7 +92,7 @@ public class CheckSerialNumberRelated {
 
     public void addValue(String value) {
 
-        if (matchingClear >= 5) {
+        if (matchingClear >= 20) {
 
             finalResult.add(value + ":Level Of->" + matchingClear);
 
@@ -184,44 +161,45 @@ public class CheckSerialNumberRelated {
     public boolean matchOposite(int matchValue, int currentValue) {
         boolean check = false;
         if (matchValue == 0) {
-            if ((currentValue == 9) || (currentValue == 1) || (currentValue == 5)) {
+
+            if ((currentValue == 1) || (currentValue == 5)) {
                 check = true;
             }
 
         } else if (matchValue == 1) {
-            if ((currentValue == 0) || (currentValue == 2) || (currentValue == 9)) {
+            if ((currentValue == 8) || (currentValue == 3)) {
                 check = true;
             }
         } else if (matchValue == 2) {
-            if ((currentValue == 1) || (currentValue == 3) || (currentValue == 6)) {
+            if ((currentValue == 7) || (currentValue == 6)) {
                 check = true;
             }
         } else if (matchValue == 3) {
-            if ((currentValue == 2) || (currentValue == 4) || (currentValue == 5)) {
+            if ((currentValue == 6) || (currentValue == 5)) {
                 check = true;
             }
         } else if (matchValue == 4) {
-            if ((currentValue == 3) || (currentValue == 5) || (currentValue == 4)) {
+            if ((currentValue == 5) || (currentValue == 9)) {
                 check = true;
             }
         } else if (matchValue == 5) {
-            if ((currentValue == 4) || (currentValue == 6) || (currentValue == 3)) {
+            if ((currentValue == 4) || (currentValue == 0)) {
                 check = true;
             }
         } else if (matchValue == 6) {
-            if ((currentValue == 5) || (currentValue == 7) || (currentValue == 2)) {
+            if ((currentValue == 3) || (currentValue == 4)) {
                 check = true;
             }
         } else if (matchValue == 7) {
-            if ((currentValue == 6) || (currentValue == 8) || (currentValue == 1)) {
+            if ((currentValue == 2) || (currentValue == 3)) {
                 check = true;
             }
         } else if (matchValue == 8) {
-            if ((currentValue == 7) || (currentValue == 9) || (currentValue == 0)) {
+            if ((currentValue == 1) || (currentValue == 2)) {
                 check = true;
             }
         } else if (matchValue == 9) {
-            if ((currentValue == 0) || (currentValue == 1) || (currentValue == 9)) {
+            if ((currentValue == 0) || (currentValue == 1)) {
                 check = true;
             }
         }
@@ -341,9 +319,7 @@ public class CheckSerialNumberRelated {
     }
 
     public int getFValue(int currentValue) {
-        if (currentValue == 0) {
-            currentValue = 9;
-        }
+
         return currentValue;
     }
 
@@ -352,9 +328,7 @@ public class CheckSerialNumberRelated {
     }
 
     public int getPValue(int currentValue) {
-        if (currentValue == 9) {
-            currentValue = 0;
-        }
+
         return currentValue;
     }
 

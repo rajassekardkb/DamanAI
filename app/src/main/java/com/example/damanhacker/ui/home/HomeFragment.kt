@@ -2,10 +2,13 @@ package com.example.damanhacker.ui.home
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -43,9 +46,9 @@ class HomeFragment : Fragment(), onResponse, onResultList {
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
 
         getData()
-      /*  CheckNumberBasicsServer().patternCheckBasedOnSerialNumber(
-            dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-        )*/
+        /*  CheckNumberBasicsServer().patternCheckBasedOnSerialNumber(
+              dbHandler.getDataProcess(DateUtilities().getCurrentDate())
+          )*/
         return binding.root
     }
 
@@ -71,11 +74,25 @@ class HomeFragment : Fragment(), onResponse, onResultList {
             adapter = AdapterViewMainScreen(value, context)
             addItemDecoration(itemDecoration)
         }
+        Toast.makeText(
+            requireContext(),
+            "Max of level of same Number->" + PatternCheck().numberAttachedValue_(value).size,
+            Toast.LENGTH_LONG
+        ).show()
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onSuccess(list: ArrayList<DataModelMainData>) {
         binding.progress.visibility = View.GONE
         setupRecyclerView(list)
+
+        var listInt = ArrayList<Int>()
+        list.forEachIndexed { index, dataModelMainData ->
+            listInt.add(dataModelMainData.number)
+        }
+        NumberGap().main(listInt)
+
 
     }
 
@@ -90,12 +107,26 @@ class HomeFragment : Fragment(), onResponse, onResultList {
             MainViewModel(
                 requireContext(), this@HomeFragment
             ).getData(binding.TextViewDate.text.toString())
+            // val dateList = SortingDate().sort(dbHandler.dateList)
+            // for (i in 0 until dateList.size) {
+            //     println("Report Date-->" + dateList[i])
+            /*       val listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
 
-            val listData = dbHandler.getDataProcess(DateUtilities().getCurrentDate())
-            val list_ = PatternCheck().numberAttachedValue(listData)
-            CheckSerialNumberRelated().patternCheckBasedOnSerialNumber(
-                list_, listData, this@HomeFragment
-            )
+
+                   // val listData = dbHandler.getDataProcess("02-11-2023")
+                   val list_ = PatternCheck().numberAttachedValue(listData)
+                   CheckSerialNumberRelated().patternCheckBasedOnSerialNumber(
+                       list_, listData, this@HomeFragment
+                   )*/
+            // }
+            //val list__ = PatternCheck().numberAttachedValue(listData)
+
+            // PatternCheck().findContinuousOddEvenSequences(listData)
+
+            /*    CheckWithMinNumberWithRelatedNumber().patternCheckBasedOnSerialNumber(
+                    PatternCheck().findMinNumber(), listData, this@HomeFragment
+                )
+    */
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -42,7 +42,7 @@ class AdapterPatternValue(
         fun bindItem(data: String, id: Int) {
             listItemBinding.textResult.text = data
             listItemBinding.textResult.setOnClickListener {
-                onResultList_.onPatternSelection(data)
+                onResultList_.onPatternSelection(data, id)
             }
 
         }

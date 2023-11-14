@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
@@ -15,11 +16,9 @@ import com.example.damanhacker.databinding.ReportFragmentBinding
 import com.example.damanhacker.intefaces.ItemOnClickListenerView
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.utlities.CheckSerialNumberBasics
-import com.example.damanhacker.utlities.CheckSerialNumberBasicsReport
-import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.SortingDate
-import java.util.Collections
+import com.example.damanhacker.utlities.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
@@ -44,6 +43,7 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
             }
         }
 
+        report()
 
         return binding.root
     }
@@ -79,12 +79,18 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
     }
 
     private fun report() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            CheckSerialNumberRelated().init(
+                dbHandler, this@ReportFragment
+            )
+        }
+    }
+
+    private fun reportOld() {
         val list = SortingDate().sort(dbHandler.dateList)
         CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
             list, this@ReportFragment, selectedNumber, requireContext()
         )
-
-
     }
 
 }
