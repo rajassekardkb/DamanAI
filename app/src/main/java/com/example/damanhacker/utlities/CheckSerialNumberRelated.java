@@ -4,6 +4,7 @@ package com.example.damanhacker.utlities;
 import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
+import com.example.damanhacker.model.ReportData;
 import com.example.damanhacker.model.getData;
 import com.example.damanhacker.model.outPutResponse;
 
@@ -14,12 +15,13 @@ public class CheckSerialNumberRelated {
     int matchingClear = 0;
     int masterMatchValue = 0;
     onResultList onResultList_;
-
     int serialNext = 0;
+    String masterDate = "";
     int loopMax = 0;
     int serialCheck = 0;
     int serialNumberPositionMoveForward = 0;
     int serialNumberPosition = 0;
+    int masterPeriod = 0;
     int previousPeriod = 0;
     int currentPeriod = 0;
 
@@ -29,6 +31,7 @@ public class CheckSerialNumberRelated {
     ArrayList<DataModelMainData> dataList;
     ArrayList<String> finalResult = new ArrayList<>();
     ArrayList<outPutResponse> outPutResult = new ArrayList<>();
+    ArrayList<ReportData> childList = new ArrayList<>();
 
     public void init(DBHandler dbHandler, onResultList onResult) {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
@@ -36,11 +39,15 @@ public class CheckSerialNumberRelated {
         for (int i = 0; i < dateList.size(); i++) {
             String date = dateList.get(i);
             finalResult.add(date + "---------------------");
+            masterDate = date;
+            childList = new ArrayList<>();
+
             ArrayList<DataModelMainData> listData = dbHandler.getDataProcess(date);
             ArrayList<getData> list_ = new PatternCheck().numberAttachedValue(listData);
             patternCheckBasedOnSerialNumber(list_, listData, onResult);
-            finalResult.add("\n");
 
+            outPutResponse otp = new outPutResponse(date, childList);
+            outPutResult.add(otp);
         }
         if (onResultList_ != null) {
             onResultList_.onItemText(finalResult);
@@ -62,12 +69,23 @@ public class CheckSerialNumberRelated {
         while (serialNumberPositionMoveForward < serialNumberList.size()) {
             serialNumberPosition = serialNumberList.get(serialNumberPositionMoveForward).getPosition();
             masterMatchValue = serialNumberList.get(serialNumberPositionMoveForward).getValue();
+            masterPeriod = serialNumberList.get(serialNumberPositionMoveForward).getPeriod();
             getMatch((serialNumberPosition + 1));
             serialNumberPositionMoveForward++;
         }
         System.out.println("NumberRelated Total Count->" + ":" + finalResult.size());
-        for (int k = 0; k < finalResult.size(); k++) {
+      /*  for (int k = 0; k < finalResult.size(); k++) {
             System.out.println("NumberRelated->" + finalResult.get(k));
+        }  */
+        for (int k = 0; k < outPutResult.size(); k++) {
+            System.out.println("NumberRelated->date:" + outPutResult.get(k).getDate());
+            ArrayList<ReportData> listChild = outPutResult.get(k).getList();
+
+            for (int l = 0; l < listChild.size(); l++) {
+                ReportData data = listChild.get(l);
+                System.out.println("" + data.toString() + "\n");
+            }
+
         }
     }
 
@@ -78,31 +96,35 @@ public class CheckSerialNumberRelated {
         }
 
         StringBuilder value = new StringBuilder();
-
         currentPeriod = dataList.get(startPosition).getPeriod();
         int pr = currentPeriod - previousPeriod;
         previousPeriod = currentPeriod;
-
         value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
+        int period = dataList.get(startPosition).getPeriod();
+        int number = masterMatchValue;
+        String time = new DateUtilities().getTime(dataList.get(startPosition).getPeriod());
+        int level = matchingClear;
+        int gap = 0;
+        ReportData data = new ReportData(period, number, time, level, gap);
         loopMax = 0;
         //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
         for (int i = startPosition; i < dataList.size(); i++) {
 
             int currentValue = dataList.get(i).getNumber();
-
             if (!matchSB(masterMatchValue, currentValue)) {
                 loopMax++;
                 //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 matchingClear++;
                 if (i == dataList.size() - 1) {
-                    addValue(value + (":P->" + pr));
+                    addValue(data);
+                    addValue_(value + (":P->" + pr));
                 }
             } else {
-                addValue(value + (":P->" + pr));
+                addValue(data);
+                addValue_(value + (":P->" + pr));
                 value.setLength(0);
                 //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 int lp = loopMax + serialCheck;
-
                 if (lp >= dataList.get(i).getPeriod()) {
                     loopMax = 0;
                     serialNumberPositionMoveForward++;
@@ -113,7 +135,20 @@ public class CheckSerialNumberRelated {
     }
 
 
-    public void addValue(String value) {
+    public void addValue(ReportData data) {
+
+        if (matchingClear >= 5) {
+
+            childList.add(new ReportData(data.getPeriod(), data.getNumber(), data.getTime(), matchingClear, loopMax));
+
+        }
+
+        matchingClear = 0;
+
+    }
+
+
+    public void addValue_(String value) {
 
         if (matchingClear >= 5) {
 

@@ -44,7 +44,6 @@ class DataDownLoading : Fragment(), onResponse, onResultList {
         dbHandler = DBHandler(context)
         lifecycleScope.launch(Dispatchers.IO) {
             getData()
-
         }
 
         return binding.root
@@ -89,6 +88,7 @@ class DataDownLoading : Fragment(), onResponse, onResultList {
         try {
             val viewModel = DownliadingViewModel(requireContext(), this)
             val dateList = SortingDate().sort(PatternCheck().last15Days)
+            dateList.reverse()
             dateList.forEachIndexed { _, element ->
                 val request = RequestGetData(
                     CHK = GET_DAMAN_LIST, DATE = element

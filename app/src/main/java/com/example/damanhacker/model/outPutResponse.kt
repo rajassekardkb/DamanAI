@@ -1,7 +1,7 @@
 package com.example.damanhacker.model
 
 data class outPutResponse(
-    val data: String,
+    val date: String,
     val list: ArrayList<ReportData>
 )
 

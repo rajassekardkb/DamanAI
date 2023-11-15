@@ -44,7 +44,7 @@ public class CheckWithMinNumberWithRelatedNumber {
         }
         System.out.println("NumberRelated Total Count->" + ":" + finalResult.size());
         for (int k = 0; k < finalResult.size(); k++) {
-            System.out.println("NumberRelated->" + finalResult.get(k));
+           // System.out.println("NumberRelated->" + finalResult.get(k));
         }
     }
 

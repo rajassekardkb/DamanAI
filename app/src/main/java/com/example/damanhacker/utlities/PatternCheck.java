@@ -364,6 +364,7 @@ public class PatternCheck {
 
         while (i < arrayList.size()) {
             int currentValue = arrayList.get(i).getNumber();
+            int period = arrayList.get(i).getPeriod();
             int sequenceStartIndex = i;
 
             while (i < arrayList.size() && arrayList.get(i).getNumber() == currentValue) {
@@ -374,6 +375,7 @@ public class PatternCheck {
                 getData data = new getData();
                 data.setValue(currentValue);
                 data.setPosition(sequenceStartIndex + 1);
+                data.setPeriod(period);
                 repeatedValues.add(data);
             }
         }
