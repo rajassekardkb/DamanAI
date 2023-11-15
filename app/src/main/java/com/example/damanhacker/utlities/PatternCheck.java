@@ -403,7 +403,7 @@ public class PatternCheck {
                 i++;
             }
 
-            if (i - sequenceStartIndex >= 4) {
+            if (i - sequenceStartIndex >= 2) {
                 getData data = new getData();
                 data.setValue(currentValue);
                 data.setPosition(sequenceStartIndex + 1);

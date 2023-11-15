@@ -2,7 +2,7 @@ package com.example.damanhacker.utlities;
 
 
 import com.example.damanhacker.database.DBHandler;
-import com.example.damanhacker.intefaces.onResultList;
+import com.example.damanhacker.intefaces.onResultListCustom;
 import com.example.damanhacker.model.DataModelMainData;
 import com.example.damanhacker.model.ReportData;
 import com.example.damanhacker.model.getData;
@@ -14,7 +14,7 @@ import java.util.Collections;
 public class CheckSerialNumberRelated {
     int matchingClear = 0;
     int masterMatchValue = 0;
-    onResultList onResultList_;
+    onResultListCustom onResultList_;
     int serialNext = 0;
     String masterDate = "";
     int loopMax = 0;
@@ -33,12 +33,14 @@ public class CheckSerialNumberRelated {
     ArrayList<outPutResponse> outPutResult = new ArrayList<>();
     ArrayList<ReportData> childList = new ArrayList<>();
 
-    public void init(DBHandler dbHandler, onResultList onResult) {
+    public void init(DBHandler dbHandler, onResultListCustom onResult) {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         Collections.reverse(dateList);
         for (int i = 0; i < dateList.size(); i++) {
             String date = dateList.get(i);
             finalResult.add(date + "---------------------");
+
+            previousPeriod=0;
             masterDate = date;
             childList = new ArrayList<>();
 
@@ -50,11 +52,11 @@ public class CheckSerialNumberRelated {
             outPutResult.add(otp);
         }
         if (onResultList_ != null) {
-            onResultList_.onItemText(finalResult);
+            onResultList_.onItemText(outPutResult);
         }
     }
 
-    public void patternCheckBasedOnSerialNumber(ArrayList<getData> listN_, ArrayList<DataModelMainData> _, onResultList onResult) {
+    public void patternCheckBasedOnSerialNumber(ArrayList<getData> listN_, ArrayList<DataModelMainData> _, onResultListCustom onResult) {
         this.dataList = _;
         this.serialNumberList = listN_;
         onResultList_ = onResult;
@@ -96,9 +98,7 @@ public class CheckSerialNumberRelated {
         }
 
         StringBuilder value = new StringBuilder();
-        currentPeriod = dataList.get(startPosition).getPeriod();
-        int pr = currentPeriod - previousPeriod;
-        previousPeriod = currentPeriod;
+
         value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
         int period = dataList.get(startPosition).getPeriod();
         int number = masterMatchValue;
@@ -117,11 +117,11 @@ public class CheckSerialNumberRelated {
                 matchingClear++;
                 if (i == dataList.size() - 1) {
                     addValue(data);
-                    addValue_(value + (":P->" + pr));
+                    addValue_(value.toString());
                 }
             } else {
                 addValue(data);
-                addValue_(value + (":P->" + pr));
+                addValue_(value.toString());
                 value.setLength(0);
                 //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 int lp = loopMax + serialCheck;
@@ -137,10 +137,11 @@ public class CheckSerialNumberRelated {
 
     public void addValue(ReportData data) {
 
-        if (matchingClear >= 5) {
-
-            childList.add(new ReportData(data.getPeriod(), data.getNumber(), data.getTime(), matchingClear, loopMax));
-
+        if (matchingClear >= 4) {
+            currentPeriod = data.getPeriod();
+            int pr = currentPeriod - previousPeriod;
+            previousPeriod = currentPeriod;
+            childList.add(new ReportData(data.getPeriod(), data.getNumber(), data.getTime(), matchingClear, pr));
         }
 
         matchingClear = 0;

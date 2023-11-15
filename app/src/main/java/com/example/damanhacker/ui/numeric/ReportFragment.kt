@@ -11,16 +11,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
 import com.example.damanhacker.adapter.AdapterResult
+import com.example.damanhacker.adapter.AdapterResult_cust
 import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.ReportFragmentBinding
 import com.example.damanhacker.intefaces.ItemOnClickListenerView
-import com.example.damanhacker.intefaces.onResultList
+import com.example.damanhacker.intefaces.onResultListCustom
 import com.example.damanhacker.model.DataModelMainData
+import com.example.damanhacker.model.outPutResponse
 import com.example.damanhacker.utlities.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
+class ReportFragment : Fragment(), onResultListCustom, ItemOnClickListenerView {
 
     private lateinit var binding: ReportFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
@@ -52,22 +54,20 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
         super.onDestroyView()
     }
 
-    override fun onItemText(data: ArrayList<String>) {
+    override fun onItemText(data: ArrayList<outPutResponse>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = AdapterResult(data, requireContext())
+            adapter = AdapterResult_cust(data, requireContext())
             addItemDecoration(itemDecoration)
         }
     }
 
     override fun onPatternSelection(pattern: Int) {
-        CheckSerialNumberBasics().patternCheckBasedOnSerialNumber(
-            listData, this@ReportFragment, pattern
-        )
-        selectedNumber = pattern
+
     }
+
 
     override fun onItemView(id: Int) {
 
@@ -88,9 +88,9 @@ class ReportFragment : Fragment(), onResultList, ItemOnClickListenerView {
 
     private fun reportOld() {
         val list = SortingDate().sort(dbHandler.dateList)
-        CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
+       /* CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
             list, this@ReportFragment, selectedNumber, requireContext()
-        )
+        )*/
     }
 
 }
