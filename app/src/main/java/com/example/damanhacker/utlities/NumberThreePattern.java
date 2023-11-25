@@ -35,10 +35,7 @@ public class NumberThreePattern {
     public void picSerialNumberBasics() {
         while (serialNumberPositionMoveForward < dataList.size()) {
             DataModelMainData data = dataList.get(serialNumberPositionMoveForward);
-            //  if (data.getPeriod() % 10 == number) {
-
             getMatch(serialNumberPositionMoveForward);
-            //  }
             serialNumberPositionMoveForward++;
         }
         if (onResultList_ != null) {

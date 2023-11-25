@@ -14,6 +14,13 @@ import java.util.Collections;
 public class CheckSerialNumberRelated {
     int matchingClear = 0;
     int masterMatchValue = 0;
+    String matchValue;
+    int matchPattern = 0;
+    int matchPatternSecondary = 0;
+    boolean addOrEven;
+
+    boolean matchCheck;
+    boolean swap;
     onResultListCustom onResultList_;
     int serialNext = 0;
     String masterDate = "";
@@ -32,15 +39,17 @@ public class CheckSerialNumberRelated {
     ArrayList<String> finalResult = new ArrayList<>();
     ArrayList<outPutResponse> outPutResult = new ArrayList<>();
     ArrayList<ReportData> childList = new ArrayList<>();
+    matchingValues matching;
 
     public void init(DBHandler dbHandler, onResultListCustom onResult) {
+        matching = new matchingValues();
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         Collections.reverse(dateList);
         for (int i = 0; i < dateList.size(); i++) {
             String date = dateList.get(i);
             finalResult.add(date + "---------------------");
 
-            previousPeriod=0;
+            previousPeriod = 0;
             masterDate = date;
             childList = new ArrayList<>();
 
@@ -73,7 +82,11 @@ public class CheckSerialNumberRelated {
             masterMatchValue = serialNumberList.get(serialNumberPositionMoveForward).getValue();
             masterPeriod = serialNumberList.get(serialNumberPositionMoveForward).getPeriod();
             getMatch((serialNumberPosition + 1));
+            matchValue = matching.getValueSB(masterMatchValue);
             serialNumberPositionMoveForward++;
+
+            addOrEven = masterMatchValue % 2 != 0;
+
         }
         System.out.println("NumberRelated Total Count->" + ":" + finalResult.size());
       /*  for (int k = 0; k < finalResult.size(); k++) {
@@ -91,7 +104,6 @@ public class CheckSerialNumberRelated {
         }
     }
 
-
     public void getMatch(int startPosition) {
         if (dataList.size() == startPosition) {
             return;
@@ -102,19 +114,24 @@ public class CheckSerialNumberRelated {
         value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
         int period = dataList.get(startPosition).getPeriod();
         int number = masterMatchValue;
+        matchValue = matching.getValue(masterMatchValue);
         String time = new DateUtilities().getTime(dataList.get(startPosition).getPeriod());
         int level = matchingClear;
         int gap = 0;
         ReportData data = new ReportData(period, number, time, level, gap);
         loopMax = 0;
+        matchCheck = false;
         //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
         for (int i = startPosition; i < dataList.size(); i++) {
 
             int currentValue = dataList.get(i).getNumber();
-            if (!matchSB(masterMatchValue, currentValue)) {
+            String currentValue_ = dataList.get(i).getValue();
+
+            if (matching.valueMatching(matchValue, currentValue_)) {
                 loopMax++;
                 //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 matchingClear++;
+                matchPattern++;
                 if (i == dataList.size() - 1) {
                     addValue(data);
                     addValue_(value.toString());
@@ -123,6 +140,7 @@ public class CheckSerialNumberRelated {
                 addValue(data);
                 addValue_(value.toString());
                 value.setLength(0);
+                matchPattern = 0;
                 //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 int lp = loopMax + serialCheck;
                 if (lp >= dataList.get(i).getPeriod()) {
@@ -134,10 +152,74 @@ public class CheckSerialNumberRelated {
         }
     }
 
+    public void getMatch_(int startPosition) {
+        if (dataList.size() == startPosition) {
+            return;
+        }
+
+        StringBuilder value = new StringBuilder();
+
+        value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
+        int period = dataList.get(startPosition).getPeriod();
+        int number = masterMatchValue;
+        matchValue = matching.getValue(masterMatchValue);
+        String time = new DateUtilities().getTime(dataList.get(startPosition).getPeriod());
+        int level = matchingClear;
+        int gap = 0;
+        ReportData data = new ReportData(period, number, time, level, gap);
+        loopMax = 0;
+        matchCheck = false;
+        //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
+        for (int i = startPosition; i < dataList.size(); i++) {
+
+            int currentValue = dataList.get(i).getNumber();
+            String currentValue_ = dataList.get(i).getValue();
+
+            if (matching.valueMatching(matchValue, currentValue_)) {
+                loopMax++;
+                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
+                matchingClear++;
+                matchPattern++;
+
+                if (!matchCheck) {
+                    //  System.out.println("If Match Pattern---->" + matchValue);
+                    //matchValue = matching.convertOpositeValue(matchValue);
+                    matchCheck = true;
+                    matchPattern = 0;
+                }
+                if (matchPattern == 1) {
+                    swap = false;
+
+                    //System.out.println("If Match Pattern---->" + matchPattern+":"+matchValue);
+                    matchValue = matching.convertOpositeValue(matchValue);
+                    matchPattern = 0;
+                    matchPatternSecondary = 0;
+                    matchCheck = false;
+                }
+                matchPatternSecondary++;
+                if (i == dataList.size() - 1) {
+                    addValue(data);
+                    addValue_(value.toString());
+                }
+            } else {
+                addValue(data);
+                addValue_(value.toString());
+                value.setLength(0);
+                matchPattern = 0;
+                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
+                int lp = loopMax + serialCheck;
+                if (lp >= dataList.get(i).getPeriod()) {
+                    loopMax = 0;
+                    serialNumberPositionMoveForward++;
+                }
+                break;
+            }
+        }
+    }
 
     public void addValue(ReportData data) {
 
-        if (matchingClear >= 4) {
+        if (matchingClear >= 5) {
             currentPeriod = data.getPeriod();
             int pr = currentPeriod - previousPeriod;
             previousPeriod = currentPeriod;
@@ -151,7 +233,7 @@ public class CheckSerialNumberRelated {
 
     public void addValue_(String value) {
 
-        if (matchingClear >= 5) {
+        if (matchingClear >= 9) {
 
             finalResult.add(value + ":Level Of->" + matchingClear);
 
@@ -166,253 +248,6 @@ public class CheckSerialNumberRelated {
 
         System.out.println(str);
 
-    }
-
-    public boolean match(int matchValue, int currentValue) {
-        boolean check = false;
-        if (matchValue == 0) {
-
-            if ((currentValue == 9) || currentValue == 1) {
-                check = true;
-            }
-
-        } else if (matchValue == 1) {
-            if ((currentValue == 0) || currentValue == 2) {
-                check = true;
-            }
-        } else if (matchValue == 2) {
-            if ((currentValue == 1) || currentValue == 3) {
-                check = true;
-            }
-        } else if (matchValue == 3) {
-            if ((currentValue == 2) || currentValue == 4) {
-                check = true;
-            }
-        } else if (matchValue == 4) {
-            if ((currentValue == 3) || currentValue == 5) {
-                check = true;
-            }
-        } else if (matchValue == 5) {
-            if ((currentValue == 4) || currentValue == 6) {
-                check = true;
-            }
-        } else if (matchValue == 6) {
-            if ((currentValue == 5) || currentValue == 7) {
-                check = true;
-            }
-        } else if (matchValue == 7) {
-            if ((currentValue == 6) || currentValue == 8) {
-                check = true;
-            }
-        } else if (matchValue == 8) {
-            if ((currentValue == 7) || currentValue == 9) {
-                check = true;
-            }
-        } else if (matchValue == 9) {
-            if ((currentValue == 8) || currentValue == 0) {
-                check = true;
-            }
-        }
-
-        return check;
-    }
-
-    public boolean matchOposite(int matchValue, int currentValue) {
-        boolean check = false;
-        if (matchValue == 0) {
-            if ((currentValue == 9) || (currentValue == 1) || (currentValue == 5)) {
-                check = true;
-            }
-
-        } else if (matchValue == 1) {
-            if ((currentValue == 0) || (currentValue == 2) || (currentValue == 9)) {
-                check = true;
-            }
-        } else if (matchValue == 2) {
-            if ((currentValue == 1) || (currentValue == 3) || (currentValue == 6)) {
-                check = true;
-            }
-        } else if (matchValue == 3) {
-            if ((currentValue == 2) || (currentValue == 4) || (currentValue == 5)) {
-                check = true;
-            }
-        } else if (matchValue == 4) {
-            if ((currentValue == 3) || (currentValue == 5) || (currentValue == 4)) {
-                check = true;
-            }
-        } else if (matchValue == 5) {
-            if ((currentValue == 4) || (currentValue == 6) || (currentValue == 3)) {
-                check = true;
-            }
-        } else if (matchValue == 6) {
-            if ((currentValue == 5) || (currentValue == 7) || (currentValue == 2)) {
-                check = true;
-            }
-        } else if (matchValue == 7) {
-            if ((currentValue == 6) || (currentValue == 8) || (currentValue == 1)) {
-                check = true;
-            }
-        } else if (matchValue == 8) {
-            if ((currentValue == 7) || (currentValue == 9) || (currentValue == 0)) {
-                check = true;
-            }
-        } else if (matchValue == 9) {
-            if ((currentValue == 0) || (currentValue == 1) || (currentValue == 9)) {
-                check = true;
-            }
-        }
-        //  System.out.println("MAtch---->" + check + ":" + matchingClear);
-        return check;
-    }
-
-    public boolean matchSB_(int matchValue, int currentValue) {
-        boolean check = false;
-        if (matchValue == 0) {
-
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-
-        } else if (matchValue == 1) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 2) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 3) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 4) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 5) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 6) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 7) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 8) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 9) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        }
-        //System.out.println("MAtch---->" + check + ":" + matchingClear);
-        return check;
-    }
-
-    public boolean matchSB(int matchValue, int currentValue) {
-        boolean check = false;
-        if (matchValue == 0) {
-
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-
-        } else if (matchValue == 1) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 2) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 3) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        } else if (matchValue == 4) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 5) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 6) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 7) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 8) {
-            if (getValue(currentValue).equals("Big")) {
-                check = true;
-            }
-        } else if (matchValue == 9) {
-            if (getValue(currentValue).equals("Small")) {
-                check = true;
-            }
-        }
-        //System.out.println("MAtch---->" + check + ":" + matchingClear);
-        return check;
-    }
-
-    public boolean matchOpositeTEST(int matchValue, int currentValue) {
-        boolean check = false;
-        if (matchValue == 0) {
-
-            if ((currentValue == 1) || (currentValue == 5)) {
-                check = true;
-            }
-        }
-
-        //  System.out.println("MAtch---->" + check + ":" + matchingClear);
-        return check;
-    }
-
-    public int getFValue(int currentValue) {
-        if (currentValue == 0) {
-            currentValue = 9;
-        }
-        return currentValue;
-    }
-
-    public boolean matchSB__(int matchValue, int currentValue) {
-        return (matchValue <= 4 && getValue(currentValue).equals("Small")) || (matchValue >= 5 && getValue(currentValue).equals("Big"));
-    }
-
-    public int getPValue(int currentValue) {
-        if (currentValue == 9) {
-            currentValue = 0;
-        }
-        return currentValue;
-    }
-
-    public String getValue(int number) {
-        String value = "";
-        switch (number) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                value = "Small";
-                break;
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-                value = "Big";
-                break;
-        }
-        return value;
     }
 
 }
