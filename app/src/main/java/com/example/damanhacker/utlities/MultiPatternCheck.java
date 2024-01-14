@@ -6,6 +6,7 @@ import com.example.damanhacker.database.DBHandler;
 import com.example.damanhacker.intefaces.onResultList;
 import com.example.damanhacker.model.DataModelMainData;
 import com.example.damanhacker.model.getData;
+import com.example.damanhacker.model.patternData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PatternCheck {
+public class MultiPatternCheck {
     StringBuilder value = new StringBuilder();
     ArrayList<String> Valuelist = new ArrayList<>();
 
@@ -69,7 +70,7 @@ public class PatternCheck {
         onResult.onItemText(Valuelist);
     }
 
-    public void checkNumberPattern(DBHandler dbHandler, String pattern, onResultList onResult) {
+    public void checkNumberPattern(DBHandler dbHandler, onResultList onResult) {
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
         ArrayList<String> list;
         for (int i = 0; i < dateList.size(); i++) {
@@ -81,7 +82,7 @@ public class PatternCheck {
             for (int k = 0; k < listData.size(); k++) {
                 list.add(listData.get(k).getNumber() + "");
             }
-            getMinMax(list, pattern, listData);
+            getMinMaxNum(list, listData);
             //getDuplicateNumber(listData);
             Valuelist.add(value.toString());
             value.setLength(0);
@@ -214,6 +215,67 @@ public class PatternCheck {
             if ((startPos) > 1) {
                 number = listData.get(startPos - 1).getNumber();
                 value.append("SNO->").append(startPos + 1).append(":").append(new DateUtilities().getTime(startPos + 1)).append("->Number ").append((listData.get(startPos).getNumber())).append("->n ").append(number + "").append("\n");
+            }
+        }
+
+
+    }
+
+    void getMinMaxNum(ArrayList<String> list, ArrayList<DataModelMainData> listData) {
+        ArrayList<patternData> patternList = new ArrayList<>();
+
+        patternList.add(new patternData("11011", 2));
+        patternList.add(new patternData("22022", 2));
+        patternList.add(new patternData("33033", 2));
+        patternList.add(new patternData("44044", 2));
+        patternList.add(new patternData("66566", 2));
+        patternList.add(new patternData("77577", 2));
+        patternList.add(new patternData("88588", 2));
+        patternList.add(new patternData("99599", 2));
+
+        patternList.add(new patternData("11000", 2));
+        patternList.add(new patternData("22000", 2));
+        patternList.add(new patternData("33000", 2));
+        patternList.add(new patternData("44000", 2));
+        patternList.add(new patternData("66555", 2));
+        patternList.add(new patternData("77555", 2));
+        patternList.add(new patternData("88555", 2));
+        patternList.add(new patternData("99555", 2));
+
+        patternList.add(new patternData("10101", 2));
+        patternList.add(new patternData("20202", 2));
+        patternList.add(new patternData("30303", 2));
+        patternList.add(new patternData("40404", 2));
+        patternList.add(new patternData("65656", 2));
+        patternList.add(new patternData("75757", 2));
+        patternList.add(new patternData("85858", 2));
+        patternList.add(new patternData("95959", 2));
+
+        patternList.add(new patternData("11111", 2));
+        patternList.add(new patternData("22222", 2));
+        patternList.add(new patternData("33333", 2));
+        patternList.add(new patternData("44444", 2));
+        patternList.add(new patternData("66666", 2));
+        patternList.add(new patternData("77777", 2));
+        patternList.add(new patternData("88888", 2));
+        patternList.add(new patternData("99999", 2));
+        StringBuilder concatenated = new StringBuilder();
+        for (String str : list) {
+            concatenated.append(str);
+        }
+        for (int i = 0; i < patternList.size(); i++) {
+            String pattern = patternList.get(i).getName();
+            Pattern regexPattern = Pattern.compile(pattern);
+            Matcher matcher = regexPattern.matcher(concatenated.toString());
+            while (matcher.find()) {
+                int startPos = matcher.start();
+                int endPos = matcher.end();
+                //System.out.println("Match found at positions: " + startPos + " - " + (endPos - 1));
+                int number;
+                if ((startPos) > 1) {
+                    number = listData.get(startPos - 1).getNumber();
+                    value.append("SNO->").append(startPos + 1).append(":").append(new DateUtilities().getTime(startPos + 1)).append("->Number ").append((listData.get(startPos).getNumber())).append("->n ").append(number + "").append(":Pat->").append(pattern).append("\n");
+                }
             }
         }
     }

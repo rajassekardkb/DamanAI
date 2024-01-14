@@ -125,7 +125,7 @@ class AdapterViewMainScreen(
 
             var check = false
 
-            val listAttached = PatternCheck().numberAttachedValue_(list)
+            val listAttached = PatternCheck().numberAttachedValue__(list)
 
             listAttached.forEachIndexed { index, data_ ->
                 if (data_.period == period) {

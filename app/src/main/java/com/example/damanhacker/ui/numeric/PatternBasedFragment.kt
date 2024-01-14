@@ -16,7 +16,7 @@ import com.example.damanhacker.databinding.PatternFragmentBinding
 import com.example.damanhacker.intefaces.onPatternSelection
 import com.example.damanhacker.intefaces.onResultList
 import com.example.damanhacker.model.patternData
-import com.example.damanhacker.utlities.PatternCheck
+import com.example.damanhacker.utlities.MultiPatternCheck
 
 class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
 
@@ -32,6 +32,26 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
             //this.onPatternSelection(binding.editPattern.text.toString().trim())
         }
         val pattern = arrayListOf(
+
+
+            patternData("1101", 2),
+            patternData("2202", 2),
+            patternData("3303", 2),
+            patternData("4404", 2),
+            patternData("6656", 2),
+            patternData("7757", 2),
+            patternData("8858", 2),
+            patternData("9959", 2),
+
+            patternData("1100", 2),
+            patternData("2200", 2),
+            patternData("3300", 2),
+            patternData("4400", 2),
+            patternData("6655", 2),
+            patternData("7755", 2),
+            patternData("8855", 2),
+            patternData("9955", 2),
+
             patternData("10101", 2),
             patternData("20202", 2),
             patternData("30303", 2),
@@ -41,7 +61,16 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
             patternData("85858", 2),
             patternData("95959", 2),
 
-
+            patternData("0000", 2),
+            patternData("1111", 2),
+            patternData("2222", 2),
+            patternData("3333", 2),
+            patternData("4444", 2),
+            patternData("5555", 2),
+            patternData("6666", 2),
+            patternData("7777", 2),
+            patternData("8888", 2),
+            patternData("9999", 2),
             patternData("SSSSSSS", 1),
             patternData("BBBBBBB", 1),
             patternData("SBSBSBS", 1),
@@ -62,6 +91,7 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
             )
         patternRecyclerView(pattern)
         dbHandler = DBHandler(context)
+        patternSelection()
         return binding.root
     }
 
@@ -103,14 +133,56 @@ class PatternBasedFragment : Fragment(), onResultList, onPatternSelection {
     override fun onPatternSelection(pattern: String, id: Int) {
         when (id) {
             1 -> {
-                PatternCheck().checkValuePattern(dbHandler, pattern, this@PatternBasedFragment)
+                // MultiPatternCheck().checkValuePattern(dbHandler, pattern, this@PatternBasedFragment)
             }
             2 -> {
-                PatternCheck().checkNumberPattern(dbHandler, pattern, this@PatternBasedFragment)
+                //MultiPatternCheck().checkNumberPattern(dbHandler, pattern, this@PatternBasedFragment)
             }
             3 -> {
-                PatternCheck().checkColorPattern(dbHandler, pattern, this@PatternBasedFragment)
+                // MultiPatternCheck().checkColorPattern(dbHandler, pattern, this@PatternBasedFragment)
             }
         }
+    }
+
+    private fun patternSelection() {
+        val pattern = arrayListOf(
+
+            patternData("1101", 2),
+            patternData("2202", 2),
+            patternData("3303", 2),
+            patternData("4404", 2),
+            patternData("6656", 2),
+            patternData("7757", 2),
+            patternData("8858", 2),
+            patternData("9959", 2),
+
+            patternData("1100", 2),
+            patternData("2200", 2),
+            patternData("3300", 2),
+            patternData("4400", 2),
+            patternData("6655", 2),
+            patternData("7755", 2),
+            patternData("8855", 2),
+            patternData("9955", 2),
+
+            patternData("10101", 2),
+            patternData("20202", 2),
+            patternData("30303", 2),
+            patternData("40404", 2),
+            patternData("65656", 2),
+            patternData("75757", 2),
+            patternData("85858", 2),
+            patternData("95959", 2),
+
+            patternData("1111", 2),
+            patternData("2222", 2),
+            patternData("3333", 2),
+            patternData("4444", 2),
+            patternData("6666", 2),
+            patternData("7777", 2),
+            patternData("8888", 2),
+            patternData("9999", 2),
+        )
+        MultiPatternCheck().checkNumberPattern(dbHandler, this@PatternBasedFragment)
     }
 }

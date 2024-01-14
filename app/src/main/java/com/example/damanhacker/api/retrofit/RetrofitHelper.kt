@@ -10,7 +10,7 @@ object RetrofitHelper {
 
     const val baseUrl = "http://rajasekar.srisankaraastro.in/"
 
-    private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+    private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)

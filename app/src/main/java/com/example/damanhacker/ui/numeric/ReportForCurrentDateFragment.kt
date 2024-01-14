@@ -23,7 +23,7 @@ import com.example.damanhacker.utlities.SortingDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ReportFragment : Fragment(), onResultListCustom, ItemOnClickListenerView {
+class ReportForCurrentDateFragment : Fragment(), onResultListCustom, ItemOnClickListenerView {
 
     private lateinit var binding: ReportFragmentBinding
     private var listData = ArrayList<DataModelMainData>()
@@ -82,7 +82,7 @@ class ReportFragment : Fragment(), onResultListCustom, ItemOnClickListenerView {
     private fun report() {
         lifecycleScope.launch(Dispatchers.Main) {
             CheckSerialNumberRelated().init(
-                dbHandler, this@ReportFragment
+                dbHandler, this@ReportForCurrentDateFragment
             )
         }
     }
