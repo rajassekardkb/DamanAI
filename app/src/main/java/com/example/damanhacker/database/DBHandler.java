@@ -159,6 +159,19 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return listValue;
     }
+    public ArrayList<com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp.DataModelMainData> getDataProcess_(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp.DataModelMainData> listValue = new ArrayList<>();
+        Cursor c = db.rawQuery(SELECT + DM_SNO + CAMA + DM_PERIOD + CAMA + DM_NUMBER + CAMA + DM_VALUE + CAMA + DM_COLOR + CAMA + DM_DATE + CAMA + DM_CURRENT_DATE_TIME + CAMA + DM_FLAG + FROM + TABLE_NAME_DAMAN_SERVER + WHERE + DM_DATE + "='" + date + "' ORDER BY " + DM_PERIOD + " ASC", null);
+        if (c.moveToFirst()) {
+            do {
+                listValue.add(new com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp.DataModelMainData(c.getInt(0), c.getInt(1), c.getInt(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return listValue;
+    }
 
     public ArrayList<DataModelMainData> getDataRaw(String date) {
         SQLiteDatabase db = this.getReadableDatabase();

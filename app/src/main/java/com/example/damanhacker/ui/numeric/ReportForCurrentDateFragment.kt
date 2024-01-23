@@ -10,42 +10,29 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.damanhacker.R
-import com.example.damanhacker.adapter.AdapterResult_cust
+import com.example.damanhacker.adapter.AdapterResult_custs
 import com.example.damanhacker.database.DBHandler
-import com.example.damanhacker.databinding.ReportFragmentBinding
+import com.example.damanhacker.databinding.NumberReportCurrentDateBinding
 import com.example.damanhacker.intefaces.ItemOnClickListenerView
-import com.example.damanhacker.intefaces.onResultListCustom
-import com.example.damanhacker.model.DataModelMainData
-import com.example.damanhacker.model.outPutResponse
-import com.example.damanhacker.utlities.CheckSerialNumberRelated
+import com.example.damanhacker.intefaces.onResultListCustoms
+import com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp
 import com.example.damanhacker.utlities.DateUtilities
-import com.example.damanhacker.utlities.SortingDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ReportForCurrentDateFragment : Fragment(), onResultListCustom, ItemOnClickListenerView {
+class ReportForCurrentDateFragment : Fragment(), onResultListCustoms, ItemOnClickListenerView {
 
-    private lateinit var binding: ReportFragmentBinding
-    private var listData = ArrayList<DataModelMainData>()
+    private lateinit var binding: NumberReportCurrentDateBinding
     private lateinit var dbHandler: DBHandler
-    var selectedNumber = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.report_fragment, container, false
+            inflater, R.layout.number_report_current_date, container, false
         )
         dbHandler = DBHandler(context)
         binding.TextViewDate.setOnClickListener {}
         binding.TextViewDate.text = DateUtilities().getCurrentDate()
-
-        binding.btnView.setOnClickListener {
-            if (binding.editPattern.text.toString() != "") {
-                selectedNumber = binding.editPattern.text.toString().toInt()
-                report()
-            }
-        }
-
         report()
 
         return binding.root
@@ -55,43 +42,29 @@ class ReportForCurrentDateFragment : Fragment(), onResultListCustom, ItemOnClick
         super.onDestroyView()
     }
 
-    override fun onItemText(data: ArrayList<outPutResponse>) {
+    override fun onItemText(data: ArrayList<CheckSerialNumberRelatedOptphp.outPutResponse>) {
         val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(context?.getDrawable(R.drawable.divider)!!)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = AdapterResult_cust(data, requireContext())
+            adapter = AdapterResult_custs(data, requireContext())
             addItemDecoration(itemDecoration)
         }
     }
-
     override fun onPatternSelection(pattern: Int) {
 
     }
 
 
     override fun onItemView(id: Int) {
-
-
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun report() {
         lifecycleScope.launch(Dispatchers.Main) {
-            CheckSerialNumberRelated().init(
+            CheckSerialNumberRelatedOptphp().init(
                 dbHandler, this@ReportForCurrentDateFragment
             )
         }
-    }
-
-    private fun reportOld() {
-        val list = SortingDate().sort(dbHandler.dateList)
-       /* CheckSerialNumberBasicsReport().patternCheckBasedOnSerialNumberReport(
-            list, this@ReportFragment, selectedNumber, requireContext()
-        )*/
     }
 
 }

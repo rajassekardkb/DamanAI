@@ -77,4 +77,9 @@
         android:name="com.example.damanhacker.ui.numeric.NumberFragment"
         android:label="Find Number"
         tools:layout="@layout/number_fragment" />
+    <fragment
+        android:id="@+id/nav_reportCurrentDate"
+        android:name="com.example.damanhacker.ui.numeric.ReportForCurrentDateFragment"
+        android:label="Current Date Report"
+        tools:layout="@layout/number_report_current_date" />
 </navigation>

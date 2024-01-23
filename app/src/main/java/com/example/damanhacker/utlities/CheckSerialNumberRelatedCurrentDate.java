@@ -9,9 +9,8 @@ import com.example.damanhacker.model.getData;
 import com.example.damanhacker.model.outPutResponse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class CheckSerialNumberRelated {
+public class CheckSerialNumberRelatedCurrentDate {
     int matchingClear = 0;
     int masterMatchValue = 0;
     String matchValue;
@@ -44,7 +43,9 @@ public class CheckSerialNumberRelated {
     public void init(DBHandler dbHandler, onResultListCustom onResult) {
         matching = new matchingValues();
         ArrayList<String> dateList = new SortingDate().sort(dbHandler.getDateList());
-        Collections.reverse(dateList);
+        dateList = new ArrayList<>();
+        dateList.add("20-01-2024");
+        //Collections.reverse(dateList);
         for (int i = 0; i < dateList.size(); i++) {
             String date = dateList.get(i);
             finalResult.add(date + "---------------------");
@@ -121,15 +122,10 @@ public class CheckSerialNumberRelated {
         ReportData data = new ReportData(period, number, time, level, gap);
         loopMax = 0;
         matchCheck = false;
-        //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
         for (int i = startPosition; i < dataList.size(); i++) {
-
-            int currentValue = dataList.get(i).getNumber();
             String currentValue_ = dataList.get(i).getValue();
-
             if (matching.valueMatching(matchValue, currentValue_)) {
                 loopMax++;
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 matchingClear++;
                 matchPattern++;
                 if (i == dataList.size() - 1) {
@@ -141,72 +137,6 @@ public class CheckSerialNumberRelated {
                 addValue_(value.toString());
                 value.setLength(0);
                 matchPattern = 0;
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
-                int lp = loopMax + serialCheck;
-                if (lp >= dataList.get(i).getPeriod()) {
-                    loopMax = 0;
-                    serialNumberPositionMoveForward++;
-                }
-                break;
-            }
-        }
-    }
-
-    public void getMatch_(int startPosition) {
-        if (dataList.size() == startPosition) {
-            return;
-        }
-
-        StringBuilder value = new StringBuilder();
-
-        value.append("").append("P->").append((serialNumberPosition)).append(":Value->").append((masterMatchValue)).append(":").append(new DateUtilities().getTime(dataList.get(startPosition).getPeriod()));
-        int period = dataList.get(startPosition).getPeriod();
-        int number = masterMatchValue;
-        matchValue = matching.getValue(masterMatchValue);
-        String time = new DateUtilities().getTime(dataList.get(startPosition).getPeriod());
-        int level = matchingClear;
-        int gap = 0;
-        ReportData data = new ReportData(period, number, time, level, gap);
-        loopMax = 0;
-        matchCheck = false;
-        //System.out.println("CHECKMatch---->" + serialNumberPosition + ":" + dataList.get(serialNumberPosition).getPeriod() + ":" + dataList.get(serialNumberPosition).getNumber());
-        for (int i = startPosition; i < dataList.size(); i++) {
-
-            int currentValue = dataList.get(i).getNumber();
-            String currentValue_ = dataList.get(i).getValue();
-
-            if (matching.valueMatching(matchValue, currentValue_)) {
-                loopMax++;
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
-                matchingClear++;
-                matchPattern++;
-
-                if (!matchCheck) {
-                    //  System.out.println("If Match Pattern---->" + matchValue);
-                    //matchValue = matching.convertOpositeValue(matchValue);
-                    matchCheck = true;
-                    matchPattern = 0;
-                }
-                if (matchPattern == 1) {
-                    swap = false;
-
-                    //System.out.println("If Match Pattern---->" + matchPattern+":"+matchValue);
-                    matchValue = matching.convertOpositeValue(matchValue);
-                    matchPattern = 0;
-                    matchPatternSecondary = 0;
-                    matchCheck = false;
-                }
-                matchPatternSecondary++;
-                if (i == dataList.size() - 1) {
-                    addValue(data);
-                    addValue_(value.toString());
-                }
-            } else {
-                addValue(data);
-                addValue_(value.toString());
-                value.setLength(0);
-                matchPattern = 0;
-                //value.append("\n").append(dataList.get(i).getPeriod()).append(" : ").append(dataList.get(i).getNumber()).append(" : ").append(getFValue(currentValue)).append(":").append(getPValue(currentValue));
                 int lp = loopMax + serialCheck;
                 if (lp >= dataList.get(i).getPeriod()) {
                     loopMax = 0;
@@ -225,18 +155,13 @@ public class CheckSerialNumberRelated {
             previousPeriod = currentPeriod;
             childList.add(new ReportData(data.getPeriod(), data.getNumber(), data.getTime(), matchingClear, pr));
         }
-
         matchingClear = 0;
-
     }
 
 
     public void addValue_(String value) {
-
-        if (matchingClear >= 9) {
-
+        if (matchingClear >= 6) {
             finalResult.add(value + ":Level Of->" + matchingClear);
-
         }
 
         matchingClear = 0;
