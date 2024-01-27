@@ -159,6 +159,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return listValue;
     }
+
     public ArrayList<com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp.DataModelMainData> getDataProcess_(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<com.example.damanhacker.utlities.CheckSerialNumberRelatedOptphp.DataModelMainData> listValue = new ArrayList<>();
@@ -236,7 +237,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void insertDataIfNotExists(ArrayList<DataModelMainData> dataList) {
         for (int i = 0; i < dataList.size(); i++) {
-           // System.out.println("DataDownloading-> Request size->"+dataList.size()+":"+i);
+            // System.out.println("DataDownloading-> Request size->"+dataList.size()+":"+i);
 
             DataModelMainData data = dataList.get(i);
             if (!dataExists(data.getDate(), String.valueOf(data.getPeriod()))) {
@@ -255,6 +256,44 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void insertDataIfNotExists_(ArrayList<DataModelMainData> dataList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            for (DataModelMainData data : dataList) {
+                if (!dataExists(db, data.getDate(), String.valueOf(data.getPeriod()))) {
+                    ContentValues values = new ContentValues();
+                    values.put(DM_NUMBER, data.getNumber());
+                    values.put(DM_VALUE, data.getValue());
+                    values.put(DM_COLOR, data.getColor());
+                    values.put(DM_FLAG, "1");
+                    values.put(DM_DATE, data.getDate());
+                    values.put(DM_PERIOD, data.getPeriod());
+                    db.insert(TABLE_NAME_DAMAN_SERVER, null, values);
+                }
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    public boolean dataExists(SQLiteDatabase db, String date, String period) {
+        try (Cursor c = db.rawQuery("SELECT COUNT(DM_SNO) FROM " + TABLE_NAME_DAMAN_SERVER +
+                " WHERE " + DM_DATE + "=? AND " + DM_PERIOD + "=?", new String[]{date, period})) {
+
+            return c.moveToFirst() && Integer.parseInt(c.getString(0)) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean dataExists(String date, String period) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT COUNT(DM_SNO) FROM " + TABLE_NAME_DAMAN_SERVER + " WHERE " + DM_DATE + "='" + date + "' AND " + DM_PERIOD + "='" + period + "'", null);
@@ -267,6 +306,22 @@ public class DBHandler extends SQLiteOpenHelper {
         c.close();
         db.close();
         return exists;
+    }
+
+    public int dataDownloadingCompare(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(" + DM_PERIOD + ") FROM " + TABLE_NAME_DAMAN_SERVER + " WHERE " + DM_DATE + "='" + date + "'", null);
+        boolean exists = false;
+        int count = 0;
+
+        if (c.moveToFirst()) {
+            exists = Integer.parseInt(c.getString(0)) > 0;
+            count = Integer.parseInt(c.getString(0));
+        }
+
+        c.close();
+        db.close();
+        return count;
     }
 
 }

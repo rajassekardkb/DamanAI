@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitHelper {
 
-    const val baseUrl = "http://codespar.in/"
+    private const val baseUrl = "http://codespar.in/"
 
     private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
 

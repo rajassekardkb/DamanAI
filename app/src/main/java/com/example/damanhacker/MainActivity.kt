@@ -4,28 +4,40 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.damanhacker.database.DBHandler
 import com.example.damanhacker.databinding.ActivityMainBinding
+import com.example.damanhacker.model.ListDateCount
+import com.example.damanhacker.model.RequestGetData
+import com.example.damanhacker.viewModel.DataDownloading
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var dbHandler: DBHandler
+    private val viewModel by lazy { DataDownloading(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
+
+        dbHandler = DBHandler(this)
+
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-                appBarConfiguration = AppBarConfiguration(
+
+        appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
                 R.id.nav_gallery,
@@ -42,16 +54,60 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_number
             ), drawerLayout
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onResume() {
+        getDataDownloading()
+        super.onResume()
+    }
+
+    private fun getDataDownloading() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            with(viewModel.getApiDateList(RequestGetData(CHK = "GET_DAMAN_LIST_DATA", DATE = ""))) {
+                if (isSuccessful) {
+                    body()?.values?.let {
+                        println("getDataDownloading-->TOTAL RECORD-->" + it.size)
+                        val values = ArrayList<ListDateCount>()
+                        it.forEachIndexed { _, element ->
+                            val cnt = dbHandler.dataDownloadingCompare(element.DM_DATE)
+
+                            val flag = element.DM_COUNT.toInt() != cnt
+                            if (flag) {
+                                values.add(
+                                    ListDateCount(
+                                        DM_DATE = element.DM_DATE,
+                                        DM_COUNT = element.DM_COUNT,
+                                        DM_FLAG = flag
+                                    )
+                                )
+                            }
+                        }
+                        println("getDataDownloading-->PREPARED RECORD-->" + values.size)
+                        values.forEachIndexed { _, element ->
+                            if (element.DM_FLAG) {
+                                viewModel.getDataDownload(date = element.DM_DATE, dbHandler = dbHandler)
+                            }
+                            //delay(timeMillis = 5000)
+                        }
+                    }
+                } else {
+                    // Handle request error
+                    // println("DataDownloading-> Request Error->" + request)
+                }
+            }
+        }
     }
 }
