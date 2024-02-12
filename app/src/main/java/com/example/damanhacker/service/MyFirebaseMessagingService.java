@@ -40,8 +40,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         Log.d("FROM", remoteMessage.getData().toString());
-       // sendNotification(notification, data);
-        senNotification(this);
+        // sendNotification(notification, data);
+        senNotification(this, remoteMessage.getData().toString());
     }
 
     private void sendNotification_(RemoteMessage.Notification notification, Map<String, String> data) {
@@ -103,67 +103,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0, notificationBuilder.build());
     }
 
-    private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        Bundle bundle = new Bundle();
-        bundle.putString(FCM_PARAM, data.get(FCM_PARAM));
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtras(bundle);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-                .setContentTitle("Adangommala")
-                .setContentText("Anmai Illana Aspithriku pongada pottangala")
-                .setAutoCancel(false)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
-                .setContentIntent(pendingIntent)
-                .setContentInfo("Hello")
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_circle_notifications))
-                // .setColor(getColor(R.color.black))
-                .setLights(Color.RED, 1000, 300)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setNumber(++numMessages)
-                .setSmallIcon(R.drawable.ic_stat_circle_notifications);
-
-        try {
-            String picture = data.get(FCM_PARAM);
-            if (picture != null && !"".equals(picture)) {
-                URL url = new URL(picture);
-                Bitmap bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                notificationBuilder.setStyle(
-                        new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(notification.getBody())
-                );
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    getString(R.string.notification_channel_id), CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
-            );
-            channel.setDescription(CHANNEL_DESC);
-            channel.setShowBadge(true);
-            channel.canShowBadge();
-            channel.enableLights(true);
-            channel.setLightColor(Color.RED);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        assert notificationManager != null;
-        notificationManager.notify(0, notificationBuilder.build());
-    }
 
 
-    private void senNotification(Context context) {
+    private void senNotification(Context context, String message) {
         final String CHANNEL_ID = "test_channel_id";
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -187,8 +129,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Create a notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Test Notification")
-                .setContentText("This is a test notification.")
+                .setContentTitle(message)
+                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
